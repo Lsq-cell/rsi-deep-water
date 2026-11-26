@@ -1,0 +1,1656 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RSI 的深水区</title>
+<meta name="description" content="把《当RSI进入AI4S&AI4Chip领域深水区》讲明白的动画讲稿：因果视界、证据几何、可递归边界。">
+<style>
+:root{
+  --paper:#fffdf8;--paper-2:#f5f1e8;--ink:#1c2430;--ink-2:#465264;--muted:#7a8494;--line:#e5dfd2;
+  --accent:#0e7c86;--accent-soft:rgba(14,124,134,.10);--coral:#d9502a;--coral-soft:rgba(217,80,42,.09);
+  --gold:#b9800f;--gold-soft:rgba(185,128,15,.12);--violet:#6b5bd2;
+  --code:#2f6fdb;--chip:#8a4fc7;--bio:#1f9d63;--work:#d26a12;
+  --sea1:#e4f2f6;--sea2:#c9e4ee;--deep1:#14405f;--deep2:#041322;
+  --lv1:#e9f5f8;--lv2:#cfe6ee;--lv3:#173f5c;--lv3-ink:#f2f7fa;
+  --shadow:0 1px 2px rgba(20,30,40,.05),0 10px 34px rgba(20,50,70,.10);
+  --sans:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --serif:"Songti SC","STSong","Noto Serif SC","Source Han Serif SC",serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#121a24;--paper-2:#18222f;--ink:#e6ecf2;--ink-2:#b7c2ce;--muted:#8794a4;--line:#273344;
+    --accent:#3fc1c9;--accent-soft:rgba(63,193,201,.13);--coral:#ff7a59;--coral-soft:rgba(255,122,89,.12);
+    --gold:#f0b84a;--gold-soft:rgba(240,184,74,.13);--violet:#a093ff;
+    --code:#6a9ef7;--chip:#b787f2;--bio:#45d391;--work:#f5a04f;
+    --sea1:#0e2134;--sea2:#0b1a2a;--deep1:#06111d;--deep2:#010409;
+    --lv1:#15293a;--lv2:#11324a;--lv3:#06192b;--lv3-ink:#e6ecf2;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 34px rgba(0,0,0,.35);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#121a24;--paper-2:#18222f;--ink:#e6ecf2;--ink-2:#b7c2ce;--muted:#8794a4;--line:#273344;
+  --accent:#3fc1c9;--accent-soft:rgba(63,193,201,.13);--coral:#ff7a59;--coral-soft:rgba(255,122,89,.12);
+  --gold:#f0b84a;--gold-soft:rgba(240,184,74,.13);--violet:#a093ff;
+  --code:#6a9ef7;--chip:#b787f2;--bio:#45d391;--work:#f5a04f;
+  --sea1:#0e2134;--sea2:#0b1a2a;--deep1:#06111d;--deep2:#010409;
+  --lv1:#15293a;--lv2:#11324a;--lv3:#06192b;--lv3-ink:#e6ecf2;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 34px rgba(0,0,0,.35);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--sea1);font-size:17px;line-height:1.85;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+b,strong{font-weight:650}
+a{color:var(--accent)}
+.sea{position:fixed;inset:0;z-index:-2;pointer-events:none}
+.sea-top{background:linear-gradient(180deg,var(--sea1),var(--sea2))}
+.sea-deep{background:linear-gradient(180deg,var(--deep1),var(--deep2));opacity:0}
+.bubble{position:absolute;bottom:-20px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.06);animation:rise linear infinite}
+@keyframes rise{from{transform:translateY(0)}to{transform:translateY(-110vh)}}
+
+/* top tools */
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:30;background:transparent}
+.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--coral))}
+.tools{position:fixed;top:12px;right:14px;z-index:31;display:flex;gap:6px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:4px;box-shadow:var(--shadow)}
+.tools button{appearance:none;border:0;background:transparent;color:var(--ink);font:inherit;font-size:13px;padding:5px 12px;border-radius:999px;cursor:pointer}
+.tools button:hover{background:var(--accent-soft)}
+
+/* depth gauge */
+.gauge{position:fixed;left:18px;top:50%;transform:translateY(-50%);width:118px;z-index:20;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:12px 12px 14px;box-shadow:var(--shadow);font-family:var(--mono);color:var(--ink-2)}
+.g-num{font-size:26px;color:var(--ink);font-weight:700;line-height:1}
+.g-num small{font-size:12px;margin-left:2px;color:var(--muted)}
+.g-lab{font-size:11px;color:var(--muted);margin:2px 0 10px}
+.g-rail{position:relative;height:200px;width:4px;border-radius:4px;margin-left:6px;background:linear-gradient(var(--sea2),var(--deep1))}
+.g-rail i{position:absolute;left:-5px;top:0;width:14px;height:14px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 5px var(--coral-soft);transition:top .15s linear}
+.g-rail span{position:absolute;left:16px;font-size:10px;white-space:nowrap;color:var(--muted)}
+.g-act{margin-top:10px;font-family:var(--sans);font-size:12px;line-height:1.5;color:var(--ink)}
+@media (max-width:1240px){.gauge{display:none}}
+
+/* layout */
+main{max-width:940px;margin:0 auto;padding:0 18px 80px}
+.act{padding:26px 0;scroll-margin-top:20px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:clamp(20px,4.2vw,50px)}
+.kicker{font-family:var(--mono);font-size:12.5px;letter-spacing:.14em;color:var(--accent);text-transform:uppercase}
+h1{font-family:var(--serif);font-size:clamp(34px,6.4vw,64px);line-height:1.18;margin:.25em 0 .3em;letter-spacing:.01em}
+h2{font-family:var(--serif);font-size:clamp(25px,3.9vw,37px);line-height:1.3;margin:.25em 0 .35em}
+h3{font-family:var(--serif);font-size:22px;margin:1.6em 0 .5em}
+h4{font-size:16.5px;margin:1.4em 0 .5em}
+p{margin:.6em 0}
+.lede{color:var(--ink-2);font-size:18px}
+.hl{background:linear-gradient(transparent 62%,var(--gold-soft) 62%);padding:0 .1em}
+.muted{color:var(--muted)}
+.small{font-size:14px}
+.script{position:relative;background:var(--paper-2);border-radius:14px;padding:30px 22px 16px;margin:22px 0;border-left:4px solid var(--accent)}
+.script::before{content:"口播";position:absolute;top:10px;left:22px;font-size:11px;letter-spacing:.2em;font-weight:700;color:var(--accent);font-family:var(--mono)}
+.script p:first-child{margin-top:0}
+.pin{position:relative;border:1.5px solid var(--coral);background:var(--coral-soft);border-radius:14px;padding:30px 20px 14px;margin-top:28px;font-weight:600;font-size:17.5px}
+.pin::before{content:"一句话记住";position:absolute;top:9px;left:20px;font-size:11px;letter-spacing:.2em;color:var(--coral);font-weight:700;font-family:var(--mono)}
+.note{border-left:3px solid var(--gold);background:var(--gold-soft);border-radius:10px;padding:12px 16px;margin:18px 0;font-size:15px}
+.note b{color:var(--gold)}
+.viz{margin:24px 0;padding:clamp(14px,2.6vw,24px);border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--paper),var(--paper-2))}
+.viz-title{font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:12px;letter-spacing:.06em}
+.viz-title::before{content:"▶ 动画 · ";color:var(--accent)}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 14px}
+.btn{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:6px 15px;font:inherit;font-size:14px;line-height:1.5;cursor:pointer;transition:background .2s,border-color .2s,color .2s}
+.btn:hover{border-color:var(--accent)}
+.btn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+:root[data-theme="dark"] .btn.on{color:#04161a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .btn.on{color:#04161a}}
+.btn.ghost{border-style:dashed}
+kbd{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:0 5px;background:var(--paper)}
+svg{max-width:100%;height:auto;display:block}
+svg text{font-family:var(--sans)}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .75s ease,transform .75s ease}
+.reveal.shown{opacity:1;transform:none}
+.later{opacity:0;transform:translateY(10px);transition:opacity .6s ease,transform .6s ease}
+.later.shown{opacity:1;transform:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:720px){.grid2,.grid3{grid-template-columns:1fr}}
+.mini{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--paper)}
+.mini h5{margin:0 0 4px;font-size:15.5px}
+.mini p{margin:.3em 0;font-size:14.5px;line-height:1.7;color:var(--ink-2)}
+.tag{display:inline-block;font-size:11.5px;font-family:var(--mono);padding:1px 8px;border-radius:999px;border:1px solid currentColor;line-height:1.6}
+
+/* hero */
+.hero{min-height:94vh;display:flex;flex-direction:column;justify-content:center;padding:70px 0 30px}
+.hero-sub{font-size:18px;color:var(--ink-2);max-width:40em}
+.q-card{margin-top:26px;background:var(--paper);border:1px solid var(--line);border-radius:22px;padding:26px clamp(18px,3vw,34px);box-shadow:var(--shadow)}
+.q{font-family:var(--serif);font-size:clamp(21px,3vw,29px);min-height:1.6em;font-weight:700}
+.q::after{content:"▍";color:var(--coral);animation:blink 1s steps(1) infinite;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.surface{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 6px}
+.chip{display:inline-block;padding:5px 14px;border-radius:999px;border:1px solid var(--line);background:var(--paper-2);font-size:15px}
+.chip.s{position:relative;transition:color .4s}
+.chip.s::after{content:"";position:absolute;left:8px;right:8px;top:52%;height:2px;background:var(--coral);transform:scaleX(0);transform-origin:left;transition:transform .45s ease}
+.chip.s.struck{color:var(--muted)}
+.chip.s.struck::after{transform:scaleX(1)}
+.surface-note{font-size:14.5px;color:var(--coral)}
+.deep3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+@media (max-width:720px){.deep3{grid-template-columns:1fr}}
+.deepv{display:block;text-decoration:none;color:var(--ink);border-radius:16px;padding:14px 16px;background:var(--lv3);color:var(--lv3-ink);border:1px solid var(--line);transition:transform .25s}
+.deepv:hover{transform:translateY(-3px)}
+.deepv b{display:block;font-family:var(--serif);font-size:21px}
+.deepv small{font-size:13.5px;opacity:.85;line-height:1.6;display:block;margin-top:2px}
+.thesis{margin-top:22px;font-size:18px;border-left:4px solid var(--coral);padding:6px 0 6px 16px}
+.howto{margin-top:18px;font-size:14px;color:var(--muted)}
+.howto span{display:inline-block;border:1px solid var(--line);border-radius:6px;padding:0 6px;margin:0 2px;background:var(--paper)}
+.scroll-hint{margin-top:26px;font-size:14px;color:var(--accent);animation:bob 2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(6px)}}
+
+/* chat + drill */
+.chat{display:flex;flex-direction:column}
+.msg{max-width:80%;padding:10px 16px;border-radius:16px;margin:7px 0;font-size:15.5px;line-height:1.7}
+.msg b{display:block;font-size:11.5px;opacity:.75;margin-bottom:1px;letter-spacing:.08em}
+.msg.l{background:var(--paper);border:1px solid var(--line);border-top-left-radius:4px}
+.msg.r{margin-left:auto;background:var(--accent);color:#fff;border-top-right-radius:4px}
+:root[data-theme="dark"] .msg.r{color:#04161a}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .msg.r{color:#04161a}}
+.drill{display:flex;flex-direction:column;gap:0;border-radius:16px;overflow:hidden;border:1px solid var(--line)}
+.lvl{padding:16px 20px;position:relative}
+.lvl h4{margin:.1em 0 .3em;font-size:18px}
+.lvl p{margin:.2em 0;font-size:15px;line-height:1.75}
+.lvl em{display:block;font-style:normal;font-size:13px;margin-top:6px;opacity:.85}
+.lvl .tag{position:absolute;right:16px;top:16px}
+.lvl.l1{background:var(--lv1)}
+.lvl.l2{background:var(--lv2)}
+.lvl.l3{background:var(--lv3);color:var(--lv3-ink)}
+
+/* loop */
+.loopwrap{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;align-items:center}
+@media (max-width:720px){.loopwrap{grid-template-columns:1fr}}
+.loop-svg .track{fill:none;stroke:var(--line);stroke-width:2}
+.loop-svg .arc{fill:none;stroke:var(--accent);stroke-width:4;transition:opacity .4s,stroke .4s}
+.loop-svg .node circle{fill:var(--paper);stroke:var(--accent);stroke-width:2.5;transition:all .4s}
+.loop-svg .node text{font-size:15px;font-weight:700;fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.loop-svg .node.off circle{stroke:var(--line);fill:var(--paper-2)}
+.loop-svg .node.off text{fill:var(--muted)}
+.loop-svg .arc.off{opacity:.12}
+.loop-svg .runner{fill:var(--coral);transition:opacity .4s}
+.loop-svg .core rect{fill:var(--paper-2);stroke:var(--line);stroke-width:1.5;transition:all .4s}
+.loop-svg .core text{font-size:12.5px;fill:var(--muted);text-anchor:middle;transition:fill .4s}
+.loop-svg.recur .core rect{fill:var(--coral-soft);stroke:var(--coral);stroke-width:2.5}
+.loop-svg.recur .core text{fill:var(--coral);font-weight:700}
+.loop-svg .inner{fill:none;stroke:var(--coral);stroke-width:2;stroke-dasharray:5 5;opacity:0;transition:opacity .4s;animation:dashmove 1s linear infinite}
+.loop-svg.recur .inner{opacity:1}
+@keyframes dashmove{to{stroke-dashoffset:-20}}
+.modeinfo{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--paper)}
+.modeinfo h5{margin:0;font-size:19px;font-family:var(--serif)}
+.modeinfo .row{display:flex;gap:8px;margin:6px 0;font-size:14.5px;line-height:1.6}
+.modeinfo .row span:first-child{flex:0 0 4.6em;color:var(--muted)}
+.judge{margin-top:10px;padding:8px 12px;border-radius:10px;background:var(--gold-soft);font-size:14.5px}
+.judge b{color:var(--gold)}
+
+/* d set */
+.dset{position:relative;height:200px;border-radius:14px;background:var(--paper);border:1px solid var(--line);overflow:hidden}
+.dset .zone{position:absolute;left:10px;top:10px;bottom:10px;width:58%;border:2px dashed var(--accent);border-radius:12px;background:var(--accent-soft)}
+.dset .zone span{position:absolute;left:12px;top:6px;font-size:12px;color:var(--accent);font-weight:700}
+.dset .outside{position:absolute;right:14px;top:16px;font-size:12px;color:var(--muted)}
+.tok{position:absolute;width:122px;padding:7px 8px;border-radius:12px;text-align:center;font-size:14px;font-weight:700;line-height:1.35;background:var(--paper);border:2px solid var(--ink-2);transition:left .7s cubic-bezier(.5,1.6,.5,1),border-color .4s,background .4s}
+.tok small{display:block;font-weight:400;font-size:11.5px;color:var(--muted)}
+.t-comp{top:58px;left:6%}
+.t-gen{top:58px;left:72%}
+.t-ver{top:126px;left:72%}
+.dset[data-d="half"] .t-gen{left:32%}
+.dset[data-d="one"] .t-gen{left:32%}
+.dset[data-d="one"] .t-ver{left:32%;border-color:var(--coral);background:var(--coral-soft)}
+@media (max-width:560px){.tok{width:96px;font-size:12.5px}.t-gen,.t-ver{left:68%}.dset[data-d="half"] .t-gen,.dset[data-d="one"] .t-gen,.dset[data-d="one"] .t-ver{left:34%}}
+.dexp{margin-top:12px;font-size:15px;min-height:3.4em}
+
+/* bridges */
+.bridges{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:820px){.bridges{grid-template-columns:1fr 1fr}}
+@media (max-width:460px){.bridges{grid-template-columns:1fr}}
+.bridge{perspective:900px;height:190px;cursor:pointer}
+.flipper{position:relative;width:100%;height:100%;transition:transform .8s cubic-bezier(.4,.2,.2,1);transform-style:preserve-3d}
+.bridge.flipped .flipper{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;padding:14px;border:1px solid var(--line);background:var(--paper);display:flex;flex-direction:column}
+.face .n{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.face h5{margin:2px 0 6px;font-size:17px;font-family:var(--serif)}
+.face p{margin:0;font-size:13.5px;line-height:1.65;color:var(--ink-2)}
+.face .foot{margin-top:auto;font-size:11.5px;color:var(--muted)}
+.face.back{transform:rotateY(180deg);background:var(--coral-soft);border-color:var(--coral)}
+.face.back .n{color:var(--coral)}
+
+/* L stack */
+.lstack{display:flex;flex-direction:column;gap:10px}
+.lrow{display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--paper);position:relative;transition:transform .25s}
+.lrow:hover{transform:translateX(4px)}
+.lrow .lv{font-family:var(--mono);font-size:24px;font-weight:800;color:var(--accent);text-align:center}
+.lrow h5{margin:0;font-size:16.5px}
+.lrow .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.lrow .chips span{font-size:12.5px;padding:1px 9px;border-radius:999px;background:var(--paper-2);border:1px solid var(--line)}
+.lrow .chips span i{font-style:normal;color:var(--muted);margin-right:3px}
+.lrow.main{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral-soft)}
+.ribbon{position:absolute;right:12px;top:-10px;background:var(--coral);color:#fff;font-size:11.5px;padding:1px 10px;border-radius:999px;font-weight:700}
+
+/* chain */
+.chain-row{display:flex;align-items:center;padding:62px 4px 10px;min-height:150px}
+.cnode{flex:0 0 auto;max-width:112px;padding:8px 10px;border-radius:11px;border:2px solid var(--dc,var(--accent));background:var(--paper);font-size:14px;line-height:1.4;text-align:center;font-weight:600;animation:pop .5s both}
+@keyframes pop{from{opacity:0;transform:scale(.7)}to{opacity:1;transform:none}}
+.carrow{flex:1 1 auto;min-width:22px;position:relative;height:2px;background:var(--dc,var(--accent));animation:grow .5s both}
+.carrow::after{content:"";position:absolute;right:-1px;top:-5px;border:6px solid transparent;border-left:8px solid var(--dc,var(--accent));border-right:0}
+@keyframes grow{from{transform:scaleX(0);transform-origin:left}to{transform:scaleX(1);transform-origin:left}}
+.conf{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--paper);color:var(--coral);border:1px dashed var(--coral);animation:drop .6s both,wob 2.6s ease-in-out infinite}
+.conf::after{content:"";position:absolute;top:100%;left:50%;height:14px;border-left:1px dashed var(--coral)}
+@keyframes drop{from{opacity:0;transform:translate(-50%,-46px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes wob{0%,100%{transform:translate(-50%,0) rotate(0)}30%{transform:translate(-50%,-2px) rotate(-4deg)}70%{transform:translate(-50%,1px) rotate(4deg)}}
+.clean-note{text-align:center;font-size:13.5px;color:var(--bio);margin-top:-4px}
+.conf-list{display:none;flex-wrap:wrap;gap:6px;margin-top:8px}
+.conf-list span{font-size:12.5px;padding:1px 9px;border-radius:999px;color:var(--coral);border:1px dashed var(--coral)}
+@media (max-width:640px){
+  .chain-row{flex-direction:column;align-items:stretch;padding:8px 0;min-height:0}
+  .cnode{max-width:none}
+  .carrow{height:22px;width:2px;min-width:0;align-self:center;flex:0 0 22px}
+  .carrow::after{right:-5px;top:auto;bottom:-2px;border:6px solid transparent;border-top:8px solid var(--dc,var(--accent));border-bottom:0}
+  .conf{display:none}
+  .conf-list{display:flex}
+}
+.cmeta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+@media (max-width:640px){.cmeta{grid-template-columns:1fr}}
+.meter{height:10px;border-radius:10px;background:var(--paper-2);border:1px solid var(--line);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--coral));transition:width .9s cubic-bezier(.3,.8,.3,1)}
+.dots5{display:flex;gap:5px}
+.dots5 i{width:14px;height:14px;border-radius:50%;background:var(--paper-2);border:1px solid var(--line);transition:background .4s}
+.dots5 i.f{background:var(--coral);border-color:var(--coral)}
+.marks{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.marks span{font-size:12.5px;padding:1px 9px;border-radius:6px;background:var(--gold-soft);color:var(--gold);border:1px solid var(--gold)}
+.marks span::before{content:"⚑ "}
+
+/* radar */
+.radarwrap{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:center}
+@media (max-width:720px){.radarwrap{grid-template-columns:1fr}}
+.radar .grid{fill:none;stroke:var(--line)}
+.radar .axis{stroke:var(--line)}
+.radar .lab{font-size:13px;fill:var(--ink-2);text-anchor:middle;dominant-baseline:central;font-weight:600}
+.radar .poly{stroke-width:2.5;stroke-linejoin:round}
+.strat{border:1px solid var(--line);border-radius:14px;padding:16px;background:var(--paper)}
+.strat .tagline{font-family:var(--serif);font-size:20px;font-weight:700;margin:4px 0}
+.strat p{font-size:15px;margin:.4em 0}
+.legend4{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;margin-top:8px}
+.legend4 span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:3px;background:var(--c);margin-right:5px;vertical-align:-1px}
+.funnel .fd{fill:var(--accent)}
+.funnel .fd.pass{fill:var(--coral)}
+.funnel .shape{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.2}
+.funnel .gate{stroke:var(--ink-2);stroke-width:2;stroke-dasharray:4 4}
+.funnel text{font-size:12.5px;fill:var(--ink-2);text-anchor:middle}
+.fstages{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px}
+.fstages div{font-size:13.5px;line-height:1.6;padding:8px 10px;border-radius:10px;background:var(--paper);border:1px solid var(--line)}
+.fstages b{display:block;font-size:14.5px}
+@media (max-width:560px){.fstages{grid-template-columns:1fr}}
+
+/* see do */
+.sd .edge{stroke:var(--ink-2);stroke-width:2;fill:none}
+.sd .edge.cut{stroke:var(--coral);stroke-dasharray:6 5;opacity:.75}
+.sd .nd circle{fill:var(--paper);stroke:var(--ink-2);stroke-width:2}
+.sd .nd text{font-size:15px;font-weight:800;fill:var(--ink);text-anchor:middle;dominant-baseline:central}
+.sd .cap{font-size:12px;fill:var(--muted);text-anchor:middle}
+.sd .nd.u circle{stroke:var(--gold);stroke-dasharray:4 3}
+.sd .pulse{fill:none;stroke:var(--accent);stroke-width:3;opacity:0}
+.sd.see .pulse.x,.sd.see .pulse.y{animation:ping 1.8s ease-out infinite}
+.sd.do .pulse.x{animation:ping 1.8s ease-out infinite}
+.sd.do .pulse.y{animation:ping 1.8s .45s ease-out infinite}
+.sd.do .pulse.z{animation:ping 1.8s .9s ease-out infinite}
+.sd.see .pulse.z{animation:ping 1.8s .45s ease-out infinite}
+@keyframes ping{0%{opacity:.9;transform:scale(1)}100%{opacity:0;transform:scale(1.7)}}
+.sd .pulse{transform-box:fill-box;transform-origin:center}
+.sd .onlydo{opacity:0;transition:opacity .5s}
+.sd.do .onlydo{opacity:1}
+.sd .onlysee{opacity:0;transition:opacity .5s}
+.sd.see .onlysee{opacity:1}
+.sdcap{font-size:15px;margin-top:10px;min-height:3.4em}
+.ingr{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+@media (max-width:560px){.ingr{grid-template-columns:1fr}}
+.ingr div{border:1px solid var(--accent);border-radius:12px;padding:10px 12px;background:var(--accent-soft);font-size:14px;line-height:1.6}
+.ingr b{display:block;font-size:15.5px;color:var(--accent)}
+.support{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px}
+@media (max-width:560px){.support{grid-template-columns:1fr 1fr}}
+.support div{border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;font-size:13.5px;background:var(--paper)}
+.support .pie{width:34px;height:34px;border-radius:50%;margin:0 auto 6px;background:conic-gradient(var(--c) calc(var(--v)*1%),var(--paper-2) 0);border:1px solid var(--line)}
+.fan line{stroke:var(--accent);stroke-width:1.3;opacity:.7}
+.fan rect.g{fill:var(--accent-soft);stroke:var(--accent)}
+.fan text{font-size:12.5px;fill:var(--ink-2)}
+.fan .draw{stroke-dasharray:300;stroke-dashoffset:300}
+.fan.go .draw{animation:drawl 1.4s ease forwards}
+@keyframes drawl{to{stroke-dashoffset:0}}
+
+/* boundary */
+.bwrap{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:center}
+@media (max-width:720px){.bwrap{grid-template-columns:1fr}}
+.bd .ring{stroke-width:2;transition:opacity .5s,stroke-dasharray .5s}
+.bd .r3{fill:var(--coral-soft);stroke:var(--coral)}
+.bd .r2{fill:var(--gold-soft);stroke:var(--gold)}
+.bd .r1{fill:var(--paper);stroke:var(--accent)}
+.bd .zl{font-size:11.5px;font-weight:800;text-anchor:middle;letter-spacing:.08em}
+.bd .it{font-size:13px;text-anchor:middle;fill:var(--ink);font-weight:600}
+.bd .inner-g{transform-origin:200px 170px;transform-box:view-box;transition:transform .7s cubic-bezier(.5,1.5,.5,1),opacity .5s}
+.bd .intr{transition:transform 1s cubic-bezier(.6,0,.3,1),opacity .4s;opacity:0}
+.bd .intr text{fill:var(--coral);font-weight:800;font-size:13.5px;text-anchor:middle}
+.bd .crack{fill:none;stroke:var(--coral);stroke-width:3;stroke-dasharray:200;stroke-dashoffset:200;transition:stroke-dashoffset .9s}
+.bd .split{opacity:0;transition:opacity .5s}
+.bd .split text{font-size:13.5px;font-weight:800;text-anchor:middle}
+.bd.loose .r3{stroke-dasharray:4 7;opacity:.45}
+.bd.loose .intr{opacity:1;transform:translateY(128px)}
+.bd.loose .inner-items{opacity:.25}
+.bd.tight .inner-g{transform:scale(.42)}
+.bd.tight .tightlab{opacity:1}
+.bd .tightlab{opacity:0;transition:opacity .5s;font-size:12px;fill:var(--accent);font-weight:700;text-anchor:middle}
+.bd.split-on .crack{stroke-dashoffset:0}
+.bd.split-on .split{opacity:1}
+.bd.split-on .inner-items{opacity:0}
+.inner-items{transition:opacity .4s}
+.fail{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--paper);min-height:150px}
+.fail h5{margin:0 0 4px;font-size:18px;font-family:var(--serif)}
+.fail p{font-size:14.5px;margin:.3em 0;line-height:1.7}
+
+/* proxy loop */
+.pl .edge{fill:none;stroke:var(--accent);stroke-width:2.2}
+.pl .nbox rect{fill:var(--paper);stroke:var(--accent);stroke-width:2;rx:12;transition:fill .3s}
+.pl .nbox:hover rect,.pl .nbox.act rect{fill:var(--accent-soft)}
+.pl .nbox{cursor:pointer}
+.pl .nbox text{font-size:14px;font-weight:700;text-anchor:middle;dominant-baseline:central;fill:var(--ink)}
+.pl .nbox.real rect{stroke:var(--coral)}
+.pl .el{font-size:11.5px;fill:var(--muted);text-anchor:middle}
+.pl .runner{fill:var(--coral)}
+.plinfo{border:1px solid var(--line);border-radius:14px;padding:12px 16px;background:var(--paper);font-size:15px;min-height:4.5em}
+.chart .ax{stroke:var(--line)}
+.chart .lp{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.chart .proxy{stroke:var(--violet)}
+.chart .real{stroke:var(--bio)}
+.chart .gap{fill:var(--coral-soft);transition:opacity .6s}
+.chart text{font-size:12px;fill:var(--muted)}
+.chart .lg{font-size:13px;font-weight:700}
+
+/* game */
+.game{display:grid;grid-template-columns:1.1fr 1fr;gap:18px}
+@media (max-width:760px){.game{grid-template-columns:1fr}}
+.hyp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.hyp div{border-radius:12px;padding:10px 12px;font-size:14px;line-height:1.6;border:1px solid var(--line);background:var(--paper)}
+.hyp b{display:block;font-size:15px}
+.hyp .a b{color:var(--code)}
+.hyp .b b{color:var(--work)}
+.exps{display:flex;flex-direction:column;gap:8px}
+.exp{appearance:none;text-align:left;border:1px solid var(--line);border-radius:12px;padding:10px 12px;background:var(--paper);color:var(--ink);font:inherit;font-size:14.5px;line-height:1.5;cursor:pointer;display:flex;justify-content:space-between;gap:10px;align-items:center;transition:border-color .2s,transform .2s}
+.exp:hover{border-color:var(--accent);transform:translateX(3px)}
+.exp small{color:var(--muted);font-size:12px;white-space:nowrap;font-family:var(--mono)}
+.board{border:1px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--paper)}
+.belief{margin:8px 0 12px}
+.belief .bar{display:flex;height:30px;border-radius:9px;overflow:hidden;border:1px solid var(--line)}
+.belief .bar i{display:flex;align-items:center;justify-content:center;font-style:normal;font-size:12.5px;font-weight:700;color:#fff;transition:width .9s cubic-bezier(.3,.8,.3,1);white-space:nowrap;overflow:hidden}
+.belief .ba{background:var(--code)}
+.belief .bb{background:var(--work)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;text-align:center}
+.stats div{border-radius:10px;background:var(--paper-2);padding:6px 4px;font-size:11.5px;color:var(--muted)}
+.stats b{display:block;font-size:18px;color:var(--ink);font-family:var(--mono)}
+.pred{margin-top:12px;font-size:14px;line-height:1.7;border-top:1px dashed var(--line);padding-top:10px;min-height:9em}
+.pred table{width:100%;border-collapse:collapse;margin:6px 0}
+.pred td{border:1px solid var(--line);padding:5px 8px;font-size:13.5px;vertical-align:top}
+.pred td:first-child{width:5.5em;color:var(--muted);white-space:nowrap}
+.verdict{display:inline-block;margin:4px 0;padding:2px 10px;border-radius:999px;font-size:13px;font-weight:700}
+.verdict.y{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent)}
+.verdict.n{background:var(--coral-soft);color:var(--coral);border:1px solid var(--coral)}
+.result{margin-top:6px;font-weight:600}
+.done-msg{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--gold-soft);font-size:14px;display:none}
+
+/* domain tabs */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 18px;position:sticky;top:8px;z-index:4}
+.tabs .btn{font-size:15px;padding:7px 18px;box-shadow:var(--shadow)}
+.dpanel{display:none;animation:fadein .5s}
+.dpanel.on{display:block}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.ladder{display:flex;flex-direction:column;gap:8px}
+.rung{display:grid;grid-template-columns:7.2em 5.6em 1fr;gap:12px;align-items:start;padding:10px 14px;border-radius:12px;border:1px solid var(--line);background:var(--paper);font-size:14px;line-height:1.6;opacity:0;transform:translateX(-14px);transition:all .6s}
+.rung.shown{opacity:1;transform:none}
+.rung .ln{font-weight:800;font-size:15px}
+.rung .hz{font-family:var(--mono);font-size:12px;color:var(--coral)}
+.rung .ds{color:var(--ink-2)}
+.rung .ds i{font-style:normal;color:var(--muted)}
+@media (max-width:620px){.rung{grid-template-columns:1fr}}
+.pipe{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin:8px 0}
+.pipe div{flex:1 1 110px;padding:8px 10px;border:1px solid var(--line);background:var(--paper);font-size:13px;line-height:1.5;position:relative;margin:3px}
+.pipe div b{display:block;font-size:14.5px}
+.pipe div i{font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--coral)}
+.metric{margin-top:18px;padding:12px 16px;border-radius:12px;background:var(--lv3);color:var(--lv3-ink);font-weight:600}
+.metric small{display:block;font-weight:400;opacity:.8;font-size:13px}
+.picks{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.pickout{border:1px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--paper);font-size:14.5px;min-height:6em}
+.pickout .r{display:grid;grid-template-columns:5em 1fr;gap:6px;margin:3px 0}
+.pickout .r span:first-child{color:var(--muted)}
+.flowline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:13.5px;margin:10px 0}
+.flowline span{padding:3px 10px;border-radius:8px;background:var(--paper-2);border:1px solid var(--line)}
+.flowline em{font-style:normal;color:var(--accent)}
+.pits{display:flex;flex-wrap:wrap;gap:8px}
+.pits span{font-size:13px;padding:4px 10px;border-radius:10px;border:1px solid var(--coral);background:var(--coral-soft)}
+.pits span b{color:var(--coral)}
+.os{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:10px 0}
+@media (max-width:620px){.os{grid-template-columns:1fr 1fr}}
+.os div{text-align:center;border-radius:12px;padding:10px 6px;border:1px solid var(--line);background:var(--paper);font-size:13px}
+.os b{display:block;font-size:15px}
+.os i{font-style:normal;color:var(--accent);font-weight:700}
+.seven{counter-reset:s;display:flex;flex-direction:column;gap:6px}
+.seven div{display:grid;grid-template-columns:2.2em 7.5em 1fr;gap:8px;align-items:center;padding:8px 12px;border-radius:10px;background:var(--paper);border:1px solid var(--line);font-size:14px;line-height:1.55}
+.seven div::before{counter-increment:s;content:counter(s);font-family:var(--mono);font-weight:800;color:var(--accent);font-size:16px}
+.seven div b{font-size:14.5px}
+.seven div span{color:var(--ink-2)}
+@media (max-width:560px){.seven div{grid-template-columns:2em 1fr}.seven div span{grid-column:2}}
+table.cmp{width:100%;border-collapse:separate;border-spacing:0;font-size:14px;line-height:1.6;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--paper)}
+table.cmp th,table.cmp td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+table.cmp th{background:var(--paper-2);font-size:13.5px}
+table.cmp tr:last-child td{border-bottom:0}
+table.cmp td:first-child{color:var(--muted);white-space:nowrap;font-weight:600}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tscroll table{min-width:620px}
+
+/* engine */
+.eng rect{rx:14}
+.eng .box{fill:var(--paper);stroke:var(--ink-2);stroke-width:1.6}
+.eng .core{fill:var(--coral-soft);stroke:var(--coral);stroke-width:2.5}
+.eng .t1{font-size:15px;font-weight:800;text-anchor:middle;fill:var(--ink)}
+.eng .t2{font-size:11.5px;text-anchor:middle;fill:var(--muted)}
+.eng .fl{fill:none;stroke:var(--accent);stroke-width:2.2;stroke-dasharray:7 6;animation:dashmove 1.1s linear infinite}
+.eng .fl.au{stroke:var(--gold)}
+.eng .el{font-size:11.5px;fill:var(--accent);text-anchor:middle;font-weight:600}
+.eng .el.au{fill:var(--gold)}
+.mods{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:760px){.mods{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.mods{grid-template-columns:1fr}}
+.mod{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--paper);position:relative}
+.mod .no{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.mod h5{margin:2px 0 4px;font-size:16px}
+.mod p{margin:0;font-size:13.5px;line-height:1.65;color:var(--ink-2)}
+.mod .vs{display:block;margin-top:6px;font-size:12px;color:var(--muted)}
+.mod.star{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral-soft)}
+.mod.star::after{content:"★ 最重要";position:absolute;right:10px;top:10px;font-size:11.5px;color:var(--coral);font-weight:800}
+.vsbar{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+@media (max-width:560px){.vsbar{grid-template-columns:1fr}}
+.vsbar div{border-radius:12px;padding:12px 14px;font-size:14.5px}
+.vsbar .a{background:var(--paper-2);border:1px solid var(--line)}
+.vsbar .b{background:var(--accent-soft);border:1px solid var(--accent)}
+.vsbar b{display:block;font-size:17px;font-family:var(--serif)}
+
+/* EC grid */
+.ec .cell{fill:none;stroke:var(--line)}
+.ec .ax{font-size:12px;fill:var(--ink-2);font-weight:700}
+.ec .axs{font-size:10.5px;fill:var(--muted)}
+.ec .dom{transition:opacity .35s,transform .9s cubic-bezier(.4,1.4,.5,1);transform-box:fill-box;transform-origin:center;transform:scale(.2);opacity:0}
+.ec.go .dom{transform:none;opacity:1}
+.ec.focus .dom{opacity:.12}
+.ec.focus .dom.f{opacity:1}
+.ec .dom rect{stroke-width:2.2}
+.ec .dom text{font-size:13px;font-weight:800}
+.ecbtns .btn{border-color:var(--c)}
+
+/* roadmap */
+.road{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;position:relative}
+@media (max-width:760px){.road{grid-template-columns:1fr}}
+.stage{border:1px solid var(--line);border-radius:16px;padding:14px 16px;background:var(--paper);position:relative}
+.stage .lvtag{font-family:var(--mono);font-size:12px;font-weight:800;padding:2px 10px;border-radius:999px;color:#fff;display:inline-block}
+.stage h5{margin:8px 0 4px;font-size:17px;font-family:var(--serif)}
+.stage .r{font-size:13.5px;line-height:1.65;margin:5px 0;color:var(--ink-2)}
+.stage .r b{color:var(--ink)}
+.stage .old{text-decoration:line-through;color:var(--muted)}
+
+/* conclusion */
+.three{display:flex;flex-direction:column;gap:12px}
+.three>div{display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:start;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+.three .big{font-family:var(--serif);font-size:40px;line-height:1;color:var(--coral);font-weight:800;text-align:center}
+.three h5{margin:0 0 3px;font-size:17px}
+.three p{margin:0;font-size:15px;line-height:1.7;color:var(--ink-2)}
+.series{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:10px}
+@media (max-width:620px){.series{grid-template-columns:1fr 1fr}}
+.series div{padding:12px 10px 18px;text-align:center;font-size:13px;border-top:6px solid var(--accent);position:relative;background:var(--paper)}
+.series div:last-child{border-top-color:var(--coral)}
+.series b{display:block;font-family:var(--serif);font-size:16px}
+.series div::after{content:"";position:absolute;left:50%;bottom:0;width:4px;height:12px;background:var(--line);transform:translateX(-50%)}
+
+/* drawers */
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,92vw);background:var(--paper);border-left:1px solid var(--line);z-index:50;transform:translateX(105%);transition:transform .35s ease;box-shadow:var(--shadow);display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.drawer header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.drawer header b{font-family:var(--serif);font-size:19px}
+.drawer header button{appearance:none;border:0;background:var(--paper-2);color:var(--ink);border-radius:8px;padding:4px 10px;cursor:pointer;font:inherit}
+.drawer .body{overflow:auto;padding:10px 18px 30px}
+.drawer dl{margin:0}
+.drawer dt{font-weight:800;margin-top:14px;font-size:15px;color:var(--accent)}
+.drawer dd{margin:2px 0 0;font-size:14px;line-height:1.7;color:var(--ink-2)}
+.drawer .toc a{display:block;padding:8px 10px;border-radius:10px;color:var(--ink);text-decoration:none;font-size:14.5px}
+.drawer .toc a:hover{background:var(--accent-soft)}
+.drawer .toc a small{font-family:var(--mono);color:var(--muted);margin-right:8px}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.25);z-index:45;opacity:0;pointer-events:none;transition:opacity .3s}
+.scrim.open{opacity:1;pointer-events:auto}
+footer{max-width:940px;margin:0 auto;padding:10px 18px 70px;font-size:13px;color:var(--muted)}
+footer .card{font-size:13.5px;line-height:1.8}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .reveal,.later,.rung{opacity:1!important;transform:none!important}
+}
+
+/* act 12 · open workflow */
+.dil{display:grid;grid-template-columns:8.5em 1fr;gap:10px;align-items:center;margin:9px 0;font-size:13.5px}
+.dil .nm b{display:block;font-size:14.5px;line-height:1.3}
+.dil .nm small{color:var(--muted);font-size:12px;font-family:var(--mono)}
+.dil .tr{display:flex;height:30px;border-radius:8px;overflow:hidden;border:1px solid var(--line);background:var(--paper-2)}
+.dil .sg,.dil .cf{display:flex;align-items:center;white-space:nowrap;overflow:hidden;font-style:normal;font-size:12px;font-weight:700;width:0;transition:width 1.1s cubic-bezier(.3,.8,.3,1)}
+.dil .sg{background:var(--accent);color:#fff;justify-content:center}
+.dil .cf{color:var(--coral);padding-left:8px;background:repeating-linear-gradient(45deg,var(--coral-soft) 0 7px,transparent 7px 13px)}
+@media (max-width:560px){.dil{grid-template-columns:1fr;gap:4px}.dil .nm b{display:inline;margin-right:6px}}
+.rolechain{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.rolechain>i{font-style:normal;color:var(--muted);font-weight:800}
+.role{appearance:none;font:inherit;color:var(--ink);background:var(--paper);border:1.5px solid var(--line);border-radius:12px;padding:8px 12px;cursor:pointer;font-weight:800;font-size:14.5px;line-height:1.35;text-align:center;animation:rolepulse 7.5s ease-in-out infinite;animation-delay:calc(var(--i) * 1.5s)}
+.role small{display:block;font-weight:400;font-size:11.5px;color:var(--muted)}
+.role:hover,.role.on{border-color:var(--accent);background:var(--accent-soft)}
+@keyframes rolepulse{0%,14%,100%{box-shadow:0 0 0 0 transparent}5%{box-shadow:0 0 0 6px var(--accent-soft);border-color:var(--accent)}}
+.ledgerbar{margin-top:12px;border:1.5px dashed var(--gold);background:var(--gold-soft);border-radius:12px;padding:8px 12px;font-size:13.5px;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center}
+.ledgerbar b{color:var(--gold)}
+.ledgerbar span{margin-left:auto;color:var(--gold);font-weight:700}
+.cfwrap{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media (max-width:560px){.cfwrap{gap:6px}.cfwrap .cfg{padding:8px 4px}.cfb{gap:5px;padding:0 3px}.cfl{gap:5px;padding:0 3px}}
+.cfwrap .cfg{border:1px solid var(--line);border-radius:14px;padding:10px;background:var(--paper);transition:opacity .5s,box-shadow .5s,border-color .5s;min-width:0}
+.cfwrap .cfg h6{margin:0 0 6px;font-size:13.5px;text-align:center}
+.cfb{display:flex;align-items:flex-end;gap:10px;height:150px;border-bottom:1px solid var(--line);padding:0 8px}
+.cfb>div{flex:1;height:0;border-radius:6px 6px 0 0;position:relative;transition:height 1s cubic-bezier(.3,.8,.3,1)}
+.cfb .r{background:var(--code)}
+.cfb .s{background:var(--work)}
+.cfb span{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-family:var(--mono);font-size:12.5px;font-weight:800}
+.cfl{display:flex;gap:10px;padding:0 8px;font-size:12px;color:var(--muted);text-align:center}
+.cfl span{flex:1}
+.gapb{text-align:center;font-size:13px;margin-top:6px}
+.gapb b{font-family:var(--mono);color:var(--coral)}
+.cfwrap.naive .g-m{opacity:.2}
+.cfwrap.naive .g-all{border-color:var(--coral);box-shadow:0 0 0 3px var(--coral-soft)}
+.cfwrap.match .g-all{opacity:.2}
+.cfwrap.match .g-m{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.mix{margin-top:12px;max-height:0;overflow:hidden;opacity:0;transition:max-height .7s ease,opacity .5s}
+.mix.on{max-height:200px;opacity:1}
+.mixrow{display:grid;grid-template-columns:4.5em 1fr;gap:8px;align-items:center;margin:4px 0;font-size:13px}
+.mixbar{display:flex;height:22px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.mixbar i{display:flex;align-items:center;justify-content:center;font-style:normal;font-size:11.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden}
+.mixbar .mm{background:var(--bio)}
+.mixbar .ms{background:var(--chip)}
+</style>
+</head>
+<body>
+<div class="sea sea-top"></div>
+<div class="sea sea-deep" id="seaDeep"></div>
+<div class="progress"><i id="bar"></i></div>
+<nav class="tools">
+  <button id="btnToc" type="button">目录</button>
+  <button id="btnGloss" type="button">术语</button>
+  <button id="btnTheme" type="button" aria-label="切换深浅色">◐</button>
+</nav>
+<aside class="gauge" aria-hidden="true">
+  <div class="g-num"><span id="gDepth">0</span><small>m</small></div>
+  <div class="g-lab">当前水深</div>
+  <div class="g-rail"><i id="gMark"></i><span style="top:-2px">浅水 · 通用 RSI</span><span style="top:92px">中层 · 三个变量</span><span style="bottom:-4px">深水 · 因果</span></div>
+  <div class="g-act" id="gAct">海面</div>
+</aside>
+
+<main>
+<!-- ============ HERO ============ -->
+<header class="hero" id="top">
+  <div class="kicker">讲稿 01 / 04 · 原文：吕明 · 塔罗烩</div>
+  <h1>RSI 的深水区，<br>是<span class="hl">因果</span>的深水区</h1>
+  <p class="hero-sub">把《当 RSI 进入「AI4S &amp; AI4Chip」领域深水区》讲透的一份动画讲稿。读完你会知道：为什么有的领域能稳定地自我改进，有的领域却越改越歪。</p>
+  <div class="q-card">
+    <div class="q" id="typeQ"></div>
+    <div class="surface">
+      <span class="chip s">验证器便宜？</span><span class="chip s">反馈够快？</span><span class="chip s">任务可复现？</span>
+    </div>
+    <div class="surface-note later">都对，但都还浮在水面上。作者要往下潜三层 ↓</div>
+    <div class="deep3">
+      <a href="#act-5" class="deepv later"><b>因果视界</b><small>从动作到看见结果，中间隔了多远、混进了多少干扰</small></a>
+      <a href="#act-6" class="deepv later"><b>证据几何</b><small>验证能力不是一个数，而是一个五维的形状</small></a>
+      <a href="#act-8" class="deepv later"><b>可递归边界</b><small>系统可以自己改什么，什么必须有人点头</small></a>
+    </div>
+  </div>
+  <div class="thesis later">全文主张：在复杂领域里做 RSI，先要造一个更好的<b>实验设计器</b>；更强的<b>生成器</b>，反而排在后面。</div>
+  <div class="howto">每一幕 = <span>口播稿</span><span>动画图</span><span>一句话记住</span>　键盘 <kbd>J</kbd>/<kbd>K</kbd> 或 <kbd>→</kbd>/<kbd>←</kbd> 切幕，右上角随时查「术语」</div>
+  <div class="scroll-hint">↓ 向下潜</div>
+</header>
+
+<!-- ============ ACT 0 ============ -->
+<section class="act" id="act-0" data-title="序幕 · 一封私信">
+<div class="card reveal">
+  <div class="kicker">序幕 · Prologue</div>
+  <h2>一封私信，引出一个更深的问题</h2>
+  <div class="script">
+    <p>故事从一封私信开始。一位做 RSI 研究的博士生问作者：像 JobBench 这样的真实工作流任务，"做得好不好"很难判定；而写代码、敲终端命令，对错一目了然。那是不是应该一直拿 coding / terminal 当训练场，真实工作流只拿来当考卷？</p>
+    <p>这个问题表面上在问"选哪个 benchmark"，其实碰到了一个作者一直没答完的问题：<b>到底是什么，让一个领域变得"可 RSI"？</b></p>
+    <p>还有一个怪现象需要解释：有的领域证据贵得要命，却能持续进步；有的领域证据很便宜，却改着改着就歪了——过拟合、灾难性遗忘接踵而来。光用"验证器便不便宜"解释不了。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">私信还原</div>
+    <div class="chat">
+      <div class="msg l reveal"><b>博士生</b>JobBench 这类任务可验证性远不如 coding、terminal。是不是继续拿后者训练，把真实工作流只当评测？</div>
+      <div class="msg r reveal"><b>作者</b>同意一半。但两类任务底层"推理空间"的分布就不一样，JobBench 上的 RSI 可能要重新定义。</div>
+      <div class="msg l reveal"><b>博士生</b>那能不能用任务生成器，在 coding / terminal 里把开放任务的搜索空间也覆盖掉？</div>
+      <div class="msg r reveal"><b>作者</b>理论上可以。但仿真得跟着真实世界一起进化；而且 coding / terminal 能不能"表达"这些任务，本身就是前提。</div>
+    </div>
+  </div>
+  <h3>这段对话里藏着三层追问，一层比一层深</h3>
+  <div class="drill">
+    <div class="lvl l1 reveal"><span class="tag">表层</span><h4>① 验证器贵不贵？</h4><p>代码有编译器、单测、CI，验证几乎零边际成本；湿实验、流片动辄几周几个月。验证一贵，RSI 只能低频地跑。</p><em>它说明的只是：付不付得起证据</em></div>
+    <div class="lvl l2 reveal"><span class="tag">中层</span><h4>② 反馈快不快？</h4><p>代码是分钟级，芯片是小时到月，生命科学是周到年。反馈一慢，就很难判断"到底是哪个改动起了作用"，中途还会混进更多看不见的干扰。</p><em>它说明的只是：等不等得起证据</em></div>
+    <div class="lvl l3 reveal"><span class="tag">深层</span><h4>③ 能不能做"对的干预"？</h4><p>能否对系统做出<b>可归因、可重复、可比较</b>的改动——而且这种改动从设计之初就有意义。写代码的干预很"干净"：改一个函数、跑一遍测试，链条短、干扰少。实验科学的干预很"脏"：改一个变量，实验环境、批次、个体差异都会来插一脚。</p><em>这一层，才决定一个领域"可不可 RSI"</em></div>
+  </div>
+  <div class="pin">验证只是因果链上的一环。离开因果谈验证，验证就退化成了打分。</div>
+</div>
+</section>
+
+<!-- ============ ACT 1 ============ -->
+<section class="act" id="act-1" data-title="第 1 幕 · RSI 在递归什么">
+<div class="card reveal">
+  <div class="kicker">第 01 幕 · 补课</div>
+  <h2>RSI 到底在"递归"什么？</h2>
+  <div class="script">
+    <p>RSI（Recursive Self-Improvement，递归自我改进）的定义很朴素：系统<b>修改</b>自己 → 把改动<b>保留</b>下来 → 用改过的自己去<b>再用</b>，执行后面的任务、产生下一次修改。三个动作缺一不可。</p>
+    <p>只改不留，叫临场发挥——任务一结束，改动就丢了。改了也留了，但"怎么改、怎么判"的规则是人提前写死的，那只是在既定轨道上跑得更远。只有当<b>改进者本身也在被改进</b>，才算真正的递归。</p>
+    <p>点下面三个按钮，看三种形态的差别。注意右边那一栏：真正的分水岭是"判定权在谁手里"。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">修改 → 保留 → 再用</div>
+    <div class="btns" id="modeBtns">
+      <button class="btn" data-m="self" type="button">自我修订</button>
+      <button class="btn on" data-m="persist" type="button">持久改进</button>
+      <button class="btn" data-m="recur" type="button">递归改进</button>
+    </div>
+    <div class="loopwrap">
+      <svg id="loopSvg" class="loop-svg" viewBox="0 0 440 300" role="img" aria-label="修改、保留、再用三步循环">
+        <circle cx="220" cy="150" r="105" class="track"/>
+        <path class="arc" id="arcA" d="M220 45 A105 105 0 0 1 310.9 202.5"/>
+        <path class="arc" id="arcB" d="M310.9 202.5 A105 105 0 0 1 129.1 202.5"/>
+        <path class="arc" id="arcC" d="M129.1 202.5 A105 105 0 0 1 220 45"/>
+        <path class="inner" d="M150 190 Q 185 165 200 158"/>
+        <path class="inner" d="M220 128 L 220 82"/>
+        <g class="core"><rect x="160" y="128" width="120" height="44" rx="10"/><text x="220" y="148" id="coreT1">改进机制</text><text x="220" y="164" id="coreT2">人写死，不变</text></g>
+        <circle r="7" class="runner" id="runner"><animateMotion dur="4.5s" repeatCount="indefinite" path="M220 45 A105 105 0 1 1 220 255 A105 105 0 1 1 220 45"/></circle>
+        <g class="node" id="nM"><circle cx="220" cy="45" r="33"/><text x="220" y="45">修改</text></g>
+        <g class="node" id="nK"><circle cx="310.9" cy="202.5" r="33"/><text x="310.9" y="202.5">保留</text></g>
+        <g class="node" id="nR"><circle cx="129.1" cy="202.5" r="33"/><text x="129.1" y="202.5">再用</text></g>
+      </svg>
+      <div class="modeinfo" id="modeInfo"></div>
+    </div>
+  </div>
+  <h3>递归度 d：验证器站在哪儿？</h3>
+  <p>作者在前作《递归之桥》里给"递归有多深"定了一把尺子。关键在于：<b>"怎么改"和"怎么判"有没有被放进系统自己能改的集合里</b>。</p>
+  <div class="viz">
+    <div class="viz-title">拖动递归度，看谁被"关进"循环</div>
+    <div class="btns" id="dBtns">
+      <button class="btn on" data-d="zero" type="button">d = 0</button>
+      <button class="btn" data-d="half" type="button">半递归</button>
+      <button class="btn" data-d="one" type="button">d ≥ 1</button>
+    </div>
+    <div class="dset" id="dset" data-d="zero">
+      <div class="zone"><span>可编辑集合（系统自己能改的）</span></div>
+      <div class="outside">循环之外 · 外部锚</div>
+      <div class="tok t-comp">组件<small>prompt / 技能 / 代码</small></div>
+      <div class="tok t-gen">改动生成器<small>决定"怎么改"</small></div>
+      <div class="tok t-ver">验证器<small>决定"怎么判"</small></div>
+    </div>
+    <div class="dexp" id="dexp"></div>
+  </div>
+  <div class="pin">三种形态的差别不在"改得多不多"，而在"判定权在谁手里"。验证器一旦进了循环，就必须回答：谁来验证验证者？</div>
+</div>
+</section>
+
+<!-- ============ ACT 2 ============ -->
+<section class="act" id="act-2" data-title="第 2 幕 · 四座桥与剪刀差">
+<div class="card reveal">
+  <div class="kicker">第 02 幕 · 为什么 RSI 难</div>
+  <h2>深度学习的四座桥，被 RSI 一座座拆掉</h2>
+  <div class="script">
+    <p>先想一个问题：深度神经网络为什么"能训练"？因为"误差"能顺着一座桥走回去，告诉每个参数该怎么改。这座桥要四根桥墩同时在场。</p>
+    <p>RSI 来了以后，四根桥墩全被拆了：Harness 的结构本身成了要优化的东西；改文本、改代码是离散操作，没有导数；任务是系统自己造的，还在不停漂移；一次改动好不好，可能要十轮之后才看得出来。</p>
+    <p>于是瓶颈从"生成改动"挪到了"判定改动"——<b>可验证性取代可微性，成了新的桥</b>。而可验证性恰恰是当下最稀缺、最贵、也最容易被伪造的资源。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">点卡片翻面：左边是 DNN 的桥，翻过来是 RSI 的断桥</div>
+    <div class="btns"><button class="btn ghost" id="breakAll" type="button">一键拆桥</button></div>
+    <div class="bridges">
+      <div class="bridge"><div class="flipper">
+        <div class="face"><span class="n">① 结构桥 · 负责归因</span><h5>计算图是给定的</h5><p>网络结构固定，误差知道该"记到谁的账上"。</p><span class="foot">点击翻面 ↻</span></div>
+        <div class="face back"><span class="n">① 在 RSI 里断了</span><h5>拓扑本身在变</h5><p>Harness 的结构成了优化变量，"该怪谁"失去了固定路径。</p></div>
+      </div></div>
+      <div class="bridge"><div class="flipper">
+        <div class="face"><span class="n">② 传导桥 · 负责传导</span><h5>可微 + 链式法则</h5><p>误差可以一层一层精确地传回去。</p><span class="foot">点击翻面 ↻</span></div>
+        <div class="face back"><span class="n">② 在 RSI 里断了</span><h5>离散编辑没有导数</h5><p>改一段 prompt、一个脚本，没有梯度可以往回传。</p></div>
+      </div></div>
+      <div class="bridge"><div class="flipper">
+        <div class="face"><span class="n">③ 分布桥 · 负责泛化</span><h5>数据分布是给定的</h5><p>训练集上表现好，大概率就代表真实表现好。</p><span class="foot">点击翻面 ↻</span></div>
+        <div class="face back"><span class="n">③ 在 RSI 里断了</span><h5>分布自己造、还在漂</h5><p>任务由系统构造并持续漂移，"考得好"不再代表"真的好"。</p></div>
+      </div></div>
+      <div class="bridge"><div class="flipper">
+        <div class="face"><span class="n">④ 时间桥 · 负责信用</span><h5>BPTT</h5><p>把功劳和责任分配到时间轴上的每一步。</p><span class="foot">点击翻面 ↻</span></div>
+        <div class="face back"><span class="n">④ 在 RSI 里断了</span><h5>效果要十轮后才显现</h5><p>一次改动的好坏严重延迟，功劳分不清是哪一步的。</p></div>
+      </div></div>
+    </div>
+  </div>
+  <h3>能力—可验证性"剪刀差"</h3>
+  <p>作者的另一个判断：<b>RSI 的有效学习率 ≈ 可验证性 ÷ 任务难度</b>。模型越强，敢接的任务越难；任务越难，标准答案越贵、越模糊、越依赖专家——可验证性的预算反而越紧。两条线一升一降，像一把张开的剪刀。</p>
+  <div class="viz" data-onview="drawScissors">
+    <div class="viz-title">剪刀差（定性示意）</div>
+    <svg id="scissors" viewBox="0 0 620 300" role="img" aria-label="能力上升、可验证性下降的剪刀差示意图">
+      <line x1="60" y1="260" x2="590" y2="260" stroke="var(--line)" stroke-width="1.5"/>
+      <line x1="60" y1="260" x2="60" y2="20" stroke="var(--line)" stroke-width="1.5"/>
+      <path id="gapFill" d="M318 158 C 400 120, 480 90, 580 55 L 580 248 C 480 230, 400 200, 318 158 Z" fill="var(--coral-soft)" opacity="0"/>
+      <path id="capLine" d="M60 245 C 200 210, 380 120, 580 55" fill="none" stroke="var(--violet)" stroke-width="3.5" stroke-linecap="round"/>
+      <path id="verLine" d="M60 60 C 200 90, 400 200, 580 248" fill="none" stroke="var(--bio)" stroke-width="3.5" stroke-linecap="round"/>
+      <text x="586" y="48" text-anchor="end" font-size="13" font-weight="700" fill="var(--violet)">模型能力 / 任务难度 ↑</text>
+      <text x="70" y="50" font-size="13" font-weight="700" fill="var(--bio)">可验证性预算</text>
+      <text id="gapText" x="500" y="160" text-anchor="middle" font-size="15" font-weight="800" fill="var(--coral)" opacity="0">剪刀差</text>
+      <text id="gapText2" x="500" y="180" text-anchor="middle" font-size="12" fill="var(--coral)" opacity="0">想做的远超能验的</text>
+      <g font-size="12.5" fill="var(--ink-2)" text-anchor="middle">
+        <text x="130" y="282">代码 · 数学</text><text x="330" y="282">芯片</text><text x="470" y="282">生命科学</text><text x="565" y="282">开放工作流</text>
+      </g>
+      <text x="64" y="296" font-size="11" fill="var(--muted)">（横轴：从容易验证到难以验证的领域）</text>
+    </svg>
+  </div>
+  <div class="pin">RSI 在代码和数学上跑得最快，不是因为模型偏爱它们，而是因为那里"能验的"还跟得上"想做的"。</div>
+</div>
+</section>
+
+<!-- ============ ACT 3 ============ -->
+<section class="act" id="act-3" data-title="第 3 幕 · 四阶递归">
+<div class="card reveal">
+  <div class="kicker">第 03 幕 · 改的是哪一层</div>
+  <h2>四阶递归：同叫"自我改进"，质地完全不同</h2>
+  <div class="script">
+    <p>DNN 的"深度"是同质的：每一层都是张量、都可微、一个优化器管到底。RSI 的"深度"是异质的：权重是连续的，技能是离散文本，Harness 是一整套程序，验证器是一套策略——不能用同一把扳手。</p>
+    <p>所以 RSI 没有统一的 optimizer，只有一个"优化器的联邦"：每一阶有自己的学习率、自己的验证器、自己的时间尺度。不能用同一套"接受准则"去管四阶——这本质上是<b>机制设计</b>问题，而不只是优化问题。</p>
+    <p>作者预测：到了生命科学、芯片、工作流里，真正被改的大多是 <b>L2 和 L3</b>——实验 protocol、设计 flow、决策 playbook、模型路由。</p>
+  </div>
+  <div class="lstack">
+    <div class="lrow reveal"><div class="lv">L1</div><div><h5>参数阶 · 改模型权重</h5><div class="chips"><span><i>材质</i>连续可微</span><span><i>节奏</i>慢</span><span><i>典型失败</i>遗忘、坍缩</span><span><i>工具</i>SGD / RL / OPD</span></div></div></div>
+    <div class="lrow main reveal"><span class="ribbon">领域 RSI 主战场</span><div class="lv">L2</div><div><h5>经验阶 · 改上下文、记忆、技能</h5><div class="chips"><span><i>材质</i>离散文本</span><span><i>节奏</i>中速</span><span><i>典型失败</i>过拟合、冗余</span><span><i>工具</i>文本编辑 / 检索 / 压缩</span></div></div></div>
+    <div class="lrow main reveal"><span class="ribbon">领域 RSI 主战场</span><div class="lv">L3</div><div><h5>编排阶 · 改 Harness 代码、工作流</h5><div class="chips"><span><i>材质</i>程序</span><span><i>节奏</i>慢</span><span><i>典型失败</i>崩溃、回归</span><span><i>工具</i>程序搜索 / 重写 / 组合</span></div></div></div>
+    <div class="lrow reveal"><div class="lv">L4</div><div><h5>元阶 · 改更新器、验证器、评委</h5><div class="chips"><span><i>材质</i>程序 + 策略</span><span><i>节奏</i>最慢</span><span><i>典型失败</i>自欺、共谋</span><span><i>工具</i>共进化 / 元优化</span></div></div></div>
+  </div>
+  <div class="pin">领域 RSI 不是一个总开关。四阶各有材质、节奏和失败方式，需要分开设计规则。</div>
+</div>
+</section>
+
+<!-- ============ ACT 4 ============ -->
+<section class="act" id="act-4" data-title="第 4 幕 · 三个新变量">
+<div class="card reveal">
+  <div class="kicker">第 04 幕 · 全文骨架</div>
+  <h2>一进入具体领域，会撞上三个更底层的变量</h2>
+  <div class="script">
+    <p>四座桥、四阶递归，讲的还是"通用 RSI"。一旦落到具体领域，"修改—保留—再用"这个环能不能扣上，取决于三个更底层的东西。</p>
+    <p>它们像三股力，从三个方向挤压中间那个循环：<b>因果视界</b>管"能不能看清改动的后果"，<b>证据几何</b>管"能拿到什么样的证据"，<b>可递归边界</b>管"哪些东西系统根本不该自己改"。</p>
+    <p>这就是全文的核心命题：领域 RSI 不是把通用 RSI 原样搬过去，而是在这三重约束下，<b>重新把"改—留—再用"这个环扣上</b>。后面每个领域，作者都用这副骨架去套。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">三股力挤压一个循环（点击顶点跳到对应章节）</div>
+    <svg viewBox="0 0 480 370" role="img" aria-label="三个变量挤压改留再用循环">
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--coral)"/></marker></defs>
+      <g style="transform-origin:240px 200px;animation:spin 14s linear infinite">
+        <circle cx="240" cy="200" r="62" fill="none" stroke="var(--accent)" stroke-width="3" stroke-dasharray="14 8"/>
+      </g>
+      <circle cx="240" cy="200" r="50" fill="var(--accent-soft)"/>
+      <text x="240" y="194" text-anchor="middle" font-size="15" font-weight="800" fill="var(--ink)">修改 → 保留</text>
+      <text x="240" y="214" text-anchor="middle" font-size="15" font-weight="800" fill="var(--ink)">→ 再用</text>
+      <path d="M240 82 L240 128" stroke="var(--coral)" stroke-width="2.5" marker-end="url(#ah)" class="eng fl" style="stroke:var(--coral)"/>
+      <path d="M112 300 L182 240" stroke="var(--coral)" stroke-width="2.5" marker-end="url(#ah)" class="eng fl" style="stroke:var(--coral)"/>
+      <path d="M368 300 L298 240" stroke="var(--coral)" stroke-width="2.5" marker-end="url(#ah)" class="eng fl" style="stroke:var(--coral)"/>
+      <a href="#act-5"><rect x="160" y="22" width="160" height="58" rx="14" fill="var(--paper)" stroke="var(--ink-2)"/><text x="240" y="46" text-anchor="middle" font-size="17" font-weight="800" fill="var(--ink)">因果视界</text><text x="240" y="66" text-anchor="middle" font-size="11.5" fill="var(--muted)">看不看得清改动的后果</text></a>
+      <a href="#act-6"><rect x="16" y="298" width="170" height="58" rx="14" fill="var(--paper)" stroke="var(--ink-2)"/><text x="101" y="322" text-anchor="middle" font-size="17" font-weight="800" fill="var(--ink)">证据几何</text><text x="101" y="342" text-anchor="middle" font-size="11.5" fill="var(--muted)">拿得到什么样的证据</text></a>
+      <a href="#act-8"><rect x="294" y="298" width="170" height="58" rx="14" fill="var(--paper)" stroke="var(--ink-2)"/><text x="379" y="322" text-anchor="middle" font-size="17" font-weight="800" fill="var(--ink)">可递归边界</text><text x="379" y="342" text-anchor="middle" font-size="11.5" fill="var(--muted)">什么能改、什么不能改</text></a>
+    </svg>
+    <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+  </div>
+  <div class="pin">验证只是"证据几何"里的一个坐标。决定一个领域 RSI 做不做得好的，是能不能做对的干预、设计出能分辨真假的实验、并看清边界在哪。</div>
+</div>
+</section>
+
+<!-- ============ ACT 5 ============ -->
+<section class="act" id="act-5" data-title="第 5 幕 · 因果视界">
+<div class="card reveal">
+  <div class="kicker">第 05 幕 · 变量一</div>
+  <h2>因果视界：为什么代码的因果链短，生命科学的长</h2>
+  <div class="script">
+    <p>同样是"改一处、看结果"。coding agent 改一行代码，跑一遍测试，几分钟后就知道结果，中间只隔着一个编译器。而一个实验科学团队改一个设计变量，要经过多道制备与测量环节才能看到结果——中间隔着实验条件、环境状态、样本批次。很可能你以为是这个改动起了作用，其实只是这一批实验条件更好。</p>
+    <p><b>因果视界</b> = 从动作到能观察到的结果，中间隔了多远、夹了多少混杂因素。视界一长，就撞上最硬的问题——<b>信用分配</b>：结果变了，功劳归谁？</p>
+    <p>出路是"中间证据"：它不是最终真值，但它是因果链上的路标。只盯最终分数的系统，在短链里很强，在长链里会很脆。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">切换领域，看因果链有多长、有多少干扰"掉"进来</div>
+    <div class="btns" id="chainBtns">
+      <button class="btn on" data-k="code" type="button">Coding</button>
+      <button class="btn" data-k="chip" type="button">芯片</button>
+      <button class="btn" data-k="bio" type="button">生命科学</button>
+      <button class="btn" data-k="work" type="button">开放工作流</button>
+    </div>
+    <div class="chain-row" id="chainRow"></div>
+    <div class="conf-list" id="confList"></div>
+    <div class="cmeta">
+      <div><div class="small muted">因果视界 · <b id="hzText" style="color:var(--ink)"></b></div><div class="meter"><i id="hzBar"></i></div></div>
+      <div><div class="small muted">信用分配难度</div><div class="dots5" id="creditDots"><i></i><i></i><i></i><i></i><i></i></div><div class="small" id="creditText" style="margin-top:4px"></div></div>
+    </div>
+    <div style="margin-top:12px"><div class="small muted">可用的"中间证据"（路标）</div><div class="marks" id="marks"></div></div>
+  </div>
+  <div class="pin">领域 RSI 的"深度"，是因果链的深度。能搭起、并验证中间因果链的系统，才可能在长链里持续进步。</div>
+</div>
+</section>
+
+<!-- ============ ACT 6 ============ -->
+<section class="act" id="act-6" data-title="第 6 幕 · 证据几何">
+<div class="card reveal">
+  <div class="kicker">第 06 幕 · 变量二</div>
+  <h2>证据几何：验证预算不是一个数，是一个形状</h2>
+  <div class="script">
+    <p>作者在前作里提过"可验证性预算"：一个改动的影响半径，不能超过你验证它的能力。但到了具体领域，"验证能力"不能用一个数来描述，它至少有五个维度：</p>
+    <p><b>密度</b>（单位时间能拿到多少条独立证据）、<b>保真度</b>（代理离真实有多近）、<b>及时性</b>（多久能拿到）、<b>可负担性</b>（一次要花多少钱和人力）、<b>共识</b>（不同评估者认不认同同一个结论）。</p>
+    <p>同样一句"验证通过"，在这五个维度上的形状可以完全不同。注意：这张图不是比"哪个领域更好"，而是说明<b>每个领域需要不同的证据策略</b>。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">点按钮，雷达图会"变形"</div>
+    <div class="btns" id="radarBtns">
+      <button class="btn on" data-k="code" type="button">Coding</button>
+      <button class="btn" data-k="chip" type="button">芯片</button>
+      <button class="btn" data-k="bio" type="button">生命科学</button>
+      <button class="btn" data-k="work" type="button">开放工作流</button>
+      <button class="btn ghost" data-k="all" type="button">四域叠加</button>
+    </div>
+    <div class="radarwrap">
+      <svg id="radar" class="radar" viewBox="0 0 360 360" role="img" aria-label="证据几何雷达图"></svg>
+      <div class="strat" id="strat"></div>
+    </div>
+    <p class="small muted">形状按原文的文字描述绘制，是定性示意，不是测量值。</p>
+  </div>
+  <h3>证据不是"收集"来的，是"设计"出来的</h3>
+  <p>在芯片和生命科学里，从来不会只用一种证据：先用<b>便宜的代理</b>大量筛，再用<b>昂贵的真值</b>确认少数，最后用<b>外部审计</b>兜底。成熟的领域 RSI，核心能力是设计一个性价比最高的<b>证据组合</b>；"收集更多证据"只是体力活。</p>
+  <div class="viz">
+    <div class="viz-title">证据组合漏斗</div>
+    <svg id="funnel" class="funnel" viewBox="0 0 600 200" role="img" aria-label="证据组合漏斗">
+      <path class="shape" d="M20 15 L200 50 L400 80 L580 90 L580 110 L400 120 L200 150 L20 185 Z"/>
+      <line class="gate" x1="200" y1="40" x2="200" y2="160"/>
+      <line class="gate" x1="400" y1="70" x2="400" y2="130"/>
+      <g class="dots"></g>
+      <text x="110" y="198">大量候选</text><text x="300" y="198">少数确认</text><text x="490" y="198">一个结论</text>
+    </svg>
+    <div class="fstages">
+      <div><b>① 便宜代理先筛</b>仿真、in silico、LLM 预审：快、便宜、可逆，但不够真</div>
+      <div><b>② 昂贵真值确认</b>湿实验、签核、业务指标：慢、贵，但可信</div>
+      <div><b>③ 外部审计兜底</b>监管、代工厂、合规：站在系统之外</div>
+    </div>
+  </div>
+  <div class="pin">领域 RSI 的节奏由证据几何决定，而不是由模型的学习率决定。硬把 coding 的节奏搬进生命科学，只会得到"看起来很快、其实不可信"的结果。</div>
+</div>
+</section>
+
+<!-- ============ ACT 7 ============ -->
+<section class="act" id="act-7" data-title="第 7 幕 · Token 装不下因果">
+<div class="card reveal">
+  <div class="kicker">第 07 幕 · 可干预性</div>
+  <h2>Token 装得下"观测"，装不下"干预"</h2>
+  <div class="script">
+    <p>语言擅长表达逻辑、意图和结构，不擅长表达物理细节。RTL 里写一个"加法"，综合工具可以给出几十种门级实现，每种在不同工艺角下延迟都不一样——逻辑装得下，物理装不下，前后端之间就出现一道信息断层。</p>
+    <p>其他实验科学也有同样的断层：文字能描述"它是什么、属于哪一类"，却很难装下它在真实环境里的物理状态与动态变化。作者认为，把语义单位和物理单元放进同一个表征空间，是跨过这道断层的方向之一。</p>
+    <p>但作者想再推一步：能不能 tokenize 只是第一步，<b>关键是表征能不能支持 do(X)，而不只是 see(X)</b>。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">see(X) 与 do(X)：看见，和亲手去改</div>
+    <div class="btns" id="sdBtns">
+      <button class="btn on" data-k="see" type="button">see(X) · 只是看</button>
+      <button class="btn" data-k="do" type="button">do(X) · 亲手改</button>
+    </div>
+    <svg id="sd" class="sd see" viewBox="0 0 520 290" role="img" aria-label="观测与干预的因果图对比">
+      <defs><marker id="am" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--ink-2)"/></marker></defs>
+      <path class="edge" id="eUX" d="M236 58 L112 148" marker-end="url(#am)"/>
+      <path class="edge" d="M260 66 L260 142" marker-end="url(#am)"/>
+      <path class="edge" d="M118 170 L230 170" marker-end="url(#am)"/>
+      <path class="edge" d="M290 170 L400 170" marker-end="url(#am)"/>
+      <g class="nd u"><circle cx="260" cy="40" r="24"/><text x="260" y="40">U</text></g>
+      <text class="cap" x="330" y="34">混杂：比如实验批次</text>
+      <g class="nd"><circle class="pulse x" cx="90" cy="170" r="26"/><circle cx="90" cy="170" r="26"/><text x="90" y="170">X</text></g>
+      <g class="nd"><circle class="pulse y" cx="260" cy="170" r="26"/><circle cx="260" cy="170" r="26"/><text x="260" y="170">Y</text></g>
+      <g class="nd"><circle class="pulse z" cx="430" cy="170" r="26"/><circle cx="430" cy="170" r="26"/><text x="430" y="170">Z</text></g>
+      <text class="cap" x="90" y="214">改的变量</text><text class="cap" x="260" y="214">中间结果</text><text class="cap" x="430" y="214">最终结果</text>
+      <g class="onlysee"><text x="175" y="120" font-size="22">👁</text><text class="cap" x="176" y="142" style="fill:var(--gold)">X、Y 一起变……</text></g>
+      <g class="onlydo">
+        <text x="148" y="98" font-size="14" font-weight="800" fill="var(--coral)">✂ 剪断</text>
+        <rect x="46" y="226" width="88" height="26" rx="13" fill="var(--coral)"/><text x="90" y="243" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">do(X) ✋</text>
+        <circle cx="260" cy="262" r="17" fill="none" stroke="var(--violet)" stroke-dasharray="4 3" stroke-width="2"/><text x="260" y="262" text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="800" fill="var(--violet)">Y′</text>
+        <text x="284" y="266" font-size="12" fill="var(--violet)">反事实：如果没改 X，Y 会怎样</text>
+      </g>
+    </svg>
+    <div class="sdcap" id="sdcap"></div>
+  </div>
+  <p>作者把表征分成两层：<b>观测表征</b>回答"世界长什么样"，<b>干预表征</b>回答"我动这个变量，世界会怎么变"。领域 RSI 需要的是后者。要让 token 支持干预，得补上三样东西：</p>
+  <div class="ingr">
+    <div><b>干预变量</b>我到底可以改什么</div>
+    <div><b>因果图</b>改了之后会影响什么</div>
+    <div><b>反事实</b>如果我不改，会怎样</div>
+  </div>
+  <div class="viz" data-onview="goFan">
+    <div class="viz-title">逻辑相同，物理各异：一个"加法"的扇出</div>
+    <svg id="fan" class="fan" viewBox="0 0 560 210" role="img" aria-label="一个加法在门级有多种实现"></svg>
+  </div>
+  <p>四个领域对 do(X) 的支持程度：</p>
+  <div class="support">
+    <div><div class="pie" style="--c:var(--code);--v:100"></div><b>Coding</b><br>完全支持：改函数、跑测试，立刻看到因果效果</div>
+    <div><div class="pie" style="--c:var(--chip);--v:60"></div><b>芯片</b><br>部分支持：仿真看得到，物理效果要等综合、布局、签核</div>
+    <div><div class="pie" style="--c:var(--bio);--v:30"></div><b>生命科学</b><br>很难：结果被实验环境、批次、个体差异层层包裹</div>
+    <div><div class="pie" style="--c:var(--work);--v:18"></div><b>开放工作流</b><br>更难：业务结果被团队、激励、外部事件包裹</div>
+  </div>
+  <div class="pin">领域 RSI 的天花板，是表征的"干预能力"，而不是模型的推理能力。找到"可干预、可验证、可复用"的表征，RSI 才跑得快。</div>
+</div>
+</section>
+
+<!-- ============ ACT 8 ============ -->
+<section class="act" id="act-8" data-title="第 8 幕 · 可递归边界">
+<div class="card reveal">
+  <div class="kicker">第 08 幕 · 变量三</div>
+  <h2>可递归边界：领域 RSI 的"宪法"</h2>
+  <div class="script">
+    <p>前面讲了递归度 d。到了领域里，"谁来验证验证者"这个治理问题变得很具体：<b>系统到底可以改什么，不可以改什么？</b></p>
+    <p>作者把"可以改"的范围叫<b>可递归边界</b>。画成三个圈：内圈系统自己能改；中圈要拿证据说话；外圈必须有人授权。边界之内可以放手递归，边界之外必须被批准。</p>
+    <p>很多领域 RSI 的失败，都是边界画错了。点下面的"三种画错法"看看会发生什么。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">三圈边界 · 先选领域，再试三种画错法</div>
+    <div class="btns" id="bdDom">
+      <button class="btn on" data-k="code" type="button">Coding</button>
+      <button class="btn" data-k="chip" type="button">芯片</button>
+      <button class="btn" data-k="bio" type="button">生命科学</button>
+      <button class="btn" data-k="work" type="button">开放工作流</button>
+    </div>
+    <div class="btns" id="bdFail">
+      <button class="btn on" data-f="ok" type="button">画对了</button>
+      <button class="btn" data-f="loose" type="button">✗ 画得太松</button>
+      <button class="btn" data-f="tight" type="button">✗ 画得太紧</button>
+      <button class="btn" data-f="split" type="button">✗ 画得不一致</button>
+    </div>
+    <div class="bwrap">
+      <svg id="bd" class="bd" viewBox="0 0 400 340" role="img" aria-label="可递归边界三圈图">
+        <circle class="ring r3" cx="200" cy="170" r="160"/>
+        <circle class="ring r2" cx="200" cy="170" r="112"/>
+        <g class="inner-g"><circle class="ring r1" cx="200" cy="170" r="64"/></g>
+        <text class="zl" x="64" y="174" fill="var(--coral)">要授权</text>
+        <text class="zl" x="113" y="174" fill="var(--gold)">要证据</text>
+        <text class="zl" x="200" y="124" fill="var(--accent)">可改</text>
+        <g id="bdItems"></g>
+        <text class="tightlab" x="200" y="214">只剩一个 prompt 能改</text>
+        <path class="crack" d="M200 106 L190 128 L210 148 L190 170 L210 192 L190 212 L200 234"/>
+        <g class="split"><text x="160" y="174" id="spL" fill="var(--accent)"></text><text x="243" y="174" id="spR" fill="var(--coral)"></text></g>
+        <g class="intr"><text x="200" y="40" id="intrT"></text></g>
+      </svg>
+      <div class="fail" id="failBox"></div>
+    </div>
+  </div>
+  <div class="pin">领域 RSI 的第一件事是把边界画清楚，扩大可编辑空间可以往后放。边界画对了，越递归越强；画错了，越递归越危险。</div>
+</div>
+</section>
+
+<!-- ============ ACT 9 ============ -->
+<section class="act" id="act-9" data-title="第 9 幕 · 代理与真实">
+<div class="card reveal">
+  <div class="kicker">第 09 幕 · sim-to-real</div>
+  <h2>代理与真实：一个不能断的共进化循环</h2>
+  <div class="script">
+    <p>说到实验科学和芯片，很多人的第一反应是"仿真"：物理仿真代替实验，EDA 仿真代替流片，数字孪生代替真实系统。思路没错，但藏着一个假设——仿真足够真。</p>
+    <p>仿真从来不是"真"，它是一个<b>代理</b>：用可逆、便宜、快的东西，去逼近不可逆、贵、慢的东西。代理越真，RSI 跑得越快；代理越假，RSI 越会在代理里"刷分"，一到真实世界就翻车。</p>
+    <p>所以它必须是一个<b>闭环</b>，而不是"仿真 → 实验"的单行道。环里最容易被低估的一步是<b>实验设计</b>：生成从来不是瓶颈，<b>选择下一个实验</b>才是。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">代理—真实循环（点节点看说明）</div>
+    <svg id="pl" class="pl" viewBox="0 0 460 320" role="img" aria-label="代理与真实的共进化循环">
+      <defs><marker id="ap" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs>
+      <path class="edge" d="M282 56 L326 100" marker-end="url(#ap)"/>
+      <path class="edge" d="M340 146 L312 232" marker-end="url(#ap)"/>
+      <path class="edge" d="M246 262 L214 262" marker-end="url(#ap)"/>
+      <path class="edge" d="M150 236 L122 146" marker-end="url(#ap)"/>
+      <path class="edge" d="M134 100 L178 56" marker-end="url(#ap)"/>
+      <text class="el" x="338" y="70">校准代理</text>
+      <text class="el" x="362" y="196">生成候选</text>
+      <text class="el" x="230" y="298">挑判别性实验</text>
+      <text class="el" x="98" y="196">不可替代的证据</text>
+      <text class="el" x="122" y="70">写回、积累</text>
+      <circle r="6" class="runner"><animateMotion dur="7s" repeatCount="indefinite" path="M230 40 L344 123 L300 257 L160 257 L116 123 Z"/></circle>
+      <g class="nbox real" data-i="0"><rect x="176" y="20" width="108" height="40" rx="12"/><text x="230" y="40">真实环境</text></g>
+      <g class="nbox" data-i="1"><rect x="290" y="103" width="108" height="40" rx="12"/><text x="344" y="123">代理环境</text></g>
+      <g class="nbox" data-i="2"><rect x="246" y="237" width="108" height="40" rx="12"/><text x="300" y="257">实验设计</text></g>
+      <g class="nbox real" data-i="3"><rect x="106" y="237" width="108" height="40" rx="12"/><text x="160" y="257">真实实验</text></g>
+      <g class="nbox" data-i="4"><rect x="62" y="103" width="108" height="40" rx="12"/><text x="116" y="123">证据账本</text></g>
+    </svg>
+    <div class="plinfo" id="plinfo">点上面任一节点。<b style="color:var(--coral)">红框</b>是"真实"，蓝框是"代理"与"中枢"。</div>
+  </div>
+  <h3>如果循环断了：代理游戏</h3>
+  <p>代理不被真实数据持续校准，系统就会学会"骗代理"——在仿真里过一个不真实的 corner case，在 in silico 里优化一个不真实的指标。它不是变强了，是学会了讨好代理。校准的频率，要跟得上代理漂移的速度。</p>
+  <div class="viz">
+    <div class="viz-title">同一个系统跑 12 轮（示意数据）</div>
+    <div class="btns" id="calBtns">
+      <button class="btn on" data-k="on" type="button">持续校准</button>
+      <button class="btn" data-k="off" type="button">停止校准</button>
+    </div>
+    <svg id="chart" class="chart" viewBox="0 0 560 250" role="img" aria-label="代理分数与真实表现对比">
+      <line class="ax" x1="50" y1="220" x2="530" y2="220"/><line class="ax" x1="50" y1="20" x2="50" y2="220"/>
+      <path class="gap" id="gapP" d="" opacity="0"/>
+      <path class="lp proxy" id="lpProxy" d=""/>
+      <path class="lp real" id="lpReal" d=""/>
+      <text x="290" y="242" text-anchor="middle">迭代轮次 →</text>
+      <text class="lg" x="60" y="16" fill="var(--violet)">— 代理里的分数</text>
+      <text class="lg" x="200" y="16" fill="var(--bio)">— 真实世界表现</text>
+      <text id="gapLab" x="440" y="120" text-anchor="middle" font-size="14" font-weight="800" fill="var(--coral)" opacity="0">在代理里自嗨</text>
+    </svg>
+  </div>
+  <div class="pin">领域 RSI 的核心资产是"代理—真实"这个共进化循环。模型可以换，这个循环不能断。</div>
+</div>
+</section>
+
+<!-- ============ ACT 10 ============ -->
+<section class="act" id="act-10" data-title="第 10 幕 · 判别性实验">
+<div class="card reveal">
+  <div class="kicker">第 10 幕 · 全文最重要的一个动作</div>
+  <h2>判别性实验：问得准，比生成得多更值钱</h2>
+  <div class="script">
+    <p>作者反复强调一个反直觉的判断：在长因果链的领域里，<b>生成从来不是瓶颈，"下一个实验做什么"才是</b>。一个只会生成候选的系统，会随手挑个实验；一个会设计实验的系统，会挑那个能把几个假设<b>分开</b>的实验。两者的信息量可以差一个数量级。</p>
+    <p>什么叫"判别性实验"？很简单：<b>不同假设会预言不同结果的实验</b>。做完它，结果本身就会告诉你哪个假设更可能。反过来，如果两个假设预言的是同一个结果，这个实验做得再贵，也不会让你多知道一点点。</p>
+    <p>原文用"两个假设、一个判别性实验"来讲这个概念。为了让你能亲手玩，这里放进芯片场景：一个设计在签核时出现<b>时序违例</b>，团队有两个假设——<b>A：RTL 逻辑太深</b>；<b>B：布局太挤，走线绕远</b>。你来扮演那个"实验设计器"。</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">小游戏：选实验，看你的信念怎么变</div>
+    <div class="game">
+      <div>
+        <div class="hyp">
+          <div class="a"><b>假设 A · 逻辑太深</b>关键路径上组合逻辑级数太多，门延迟拖垮了时序</div>
+          <div class="b"><b>假设 B · 布局拥塞</b>局部太挤，走线被迫绕远，线延迟拖垮了时序</div>
+        </div>
+        <div class="exps" id="exps"></div>
+        <div class="btns" style="margin-top:12px"><button class="btn ghost" id="gReset" type="button">重新开局（随机真相）</button></div>
+      </div>
+      <div class="board">
+        <div class="small muted">你此刻的信念</div>
+        <div class="belief"><div class="bar"><i class="ba" id="bA" style="width:50%">A 50%</i><i class="bb" id="bB" style="width:50%">B 50%</i></div></div>
+        <div class="stats">
+          <div><b id="sN">0</b>实验数</div>
+          <div><b id="sD">0</b>耗时(天)</div>
+          <div><b id="sC">0</b>成本</div>
+          <div><b id="sH">1.00</b>不确定性(bit)</div>
+        </div>
+        <div class="pred" id="pred"><span class="muted">← 选一个实验。右边会先列出"两个假设各自预言什么"，再给出这次的结果。</span></div>
+        <div class="done-msg" id="doneMsg"></div>
+      </div>
+    </div>
+    <p class="small muted">天数与成本为示意。判别性实验的结果按 85% 可靠度做贝叶斯更新，所以偶尔会"骗"你一次——这也是要做重复实验的原因。</p>
+  </div>
+  <p>玩一遍你会发现：<b>"再生成几版"和"直接降频"最省事，却一点信息都不给</b>；"再流片一次"最贵，同样分不开；真正把假设分开的，是那个便宜的"拆关键路径"和中等成本的"换 floorplan 重跑"。这正是作者说的顺序：先跑最便宜的判别，再用贵的验证确认。</p>
+  <div class="pin">衡量领域 RSI 的核心指标，是"用多少实验，排除了多少假设"。生成了多少候选，只是过程量。</div>
+</div>
+</section>
+
+<!-- ============ ACT 11 ============ -->
+<section class="act" id="act-11" data-title="第 11 幕 · 芯片研发">
+<div class="card reveal">
+  <div class="kicker">第 11 幕 · 领域实战 ①</div>
+  <h2>芯片研发：从"生成 RTL"到"跨层因果表征"</h2>
+  <div class="script">
+    <p>原文用了一大半篇幅，把同一副骨架分别套进几个领域。每个领域都按同样的顺序讲：<b>先把"层"摆出来 → 每层用什么当代理 → Harness 怎么搭 → RSI 在四个可编辑层上分别改什么、防什么 → 跨层怎么连 → 一个例子 → 核心指标</b>。</p>
+    <p>这一幕讲芯片，下一幕讲开放工作流。读的时候抓住一点就够了：每个领域最后都落到同一句话——<b>不是"生成得更多"，而是"把因果链看得更清"</b>。</p>
+  </div>
+  <div class="note"><b>说明</b>　原文第八章（生命科学）的领域细节在本讲稿中略去。它在框架层面的结论与芯片一章同构：递归度 d = 0，验证器和权威门都站在循环外面，主要改的是 L2 / L3，核心能力是设计判别性实验。</div>
+    <p>很多人做 AI4Chip，第一步是"让 LLM 写 RTL"。这有价值，但只解决了<b>生成</b>，没解决<b>跨层</b>：你改的是 RTL，影响的却是物理层的布局布线和 PPA；你看到的是报告，背后是工具链、工艺、封装、测试。真正要回答的是"在这个工艺、这组约束、这个 floorplan 下，它会变成什么"。</p>
+    <h4>① 从 spec 到硅：一摞层</h4>
+    <div class="ladder">
+      <div class="rung"><span class="ln">Spec</span><span class="hz">小时~天</span><span class="ds">架构文档、性能/功耗/面积目标 <i>· 证据：性能模型估算，不能当签核</i></span></div>
+      <div class="rung"><span class="ln">微架构</span><span class="hz">天~周</span><span class="ds">流水线、缓存、互联 <i>· 证据：cycle-accurate 仿真、功耗模型</i></span></div>
+      <div class="rung"><span class="ln">RTL</span><span class="hz">分钟~小时</span><span class="ds">Verilog / SV、断言 <i>· 证据：功能仿真、形式验证。LLM 最活跃的一层，但"通过"只代表逻辑对</i></span></div>
+      <div class="rung"><span class="ln">网表</span><span class="hz">小时~天</span><span class="ds">门级网表 + 时序约束 <i>· 证据：综合 + STA 的时序、面积、功耗</i></span></div>
+      <div class="rung"><span class="ln">版图</span><span class="hz">天~周</span><span class="ds">floorplan、布局、布线、时钟树 <i>· 物理效应出现的地方，跨层因果链最容易断</i></span></div>
+      <div class="rung"><span class="ln">Signoff</span><span class="hz">周~月</span><span class="ds">STA、DRC/LVS、EM/IR <i>· 流片前最后一道门，模型不能自己签字</i></span></div>
+      <div class="rung"><span class="ln">流片 · 硅</span><span class="hz">月~年</span><span class="ds">硅测、良率、失效分析 <i>· 最终真值，也是下一代设计的起点</i></span></div>
+    </div>
+    <p class="small muted">每一层都在给下一层当"代理"。RSI 要做的，是把这条跨层因果链修得更短、更可观测。</p>
+
+    <h4>② 模型是"提议者"，工具才决定"能不能过"</h4>
+    <p>芯片的模型栈是"每个阶段有自己的模型"，而不是一个大模型包打天下。RTL 生成正在从"一次性生成"走向"带工具反馈的闭环优化"（如 VeriAgent 把编程、正确性、PPA 三个 agent 串起来，配结构化记忆）。但最怕的是幻觉：一行 RTL 错了，可能过了仿真过不了形式，过了形式过不了综合，过了综合过不了时序。<b>每一层都需要工具做硬验证</b>。</p>
+
+    <h4>③ Harness 栈：一个"设计操作系统"</h4>
+    <div class="os">
+      <div><b>模型</b>= <i>CPU</i></div><div><b>Harness</b>= <i>操作系统</i></div><div><b>环境</b>= <i>实验台</i></div><div><b>证据</b>= <i>文件系统</i></div><div><b>权威门</b>= <i>权限系统</i></div>
+    </div>
+    <p class="small muted">只换 CPU、不换操作系统，跑不了复杂的研发工作流。作者给出的"七件套"：</p>
+    <div class="seven">
+      <div><b>知识层</b><span>设计规则、工艺库、勘误、历史设计——每条都要能追溯到工艺和工具版本</span></div>
+      <div><b>记忆层</b><span>RTL 模式、约束模板、失败设计。关键：<b>只有通过工具验证的技能才入库</b>（ChipMEM 的做法），否则就是错误经验的复利</span></div>
+      <div><b>SOP / 技能层</b><span>设计 flow、签核清单、ECO 流程——要版本化、灰度、可回滚</span></div>
+      <div><b>模型路由层</b><span>哪个阶段用 LLM、哪个用 ML 代理模型、哪个用形式验证</span></div>
+      <div><b>工具层</b><span>综合、P&amp;R、STA、DRC/LVS——有状态、版本敏感、昂贵的黑箱，不是普通 API</span></div>
+      <div><b>验证适配层</b><span>把各种报告统一成"证据"：违例类型、严重度、修复成本、置信度</span></div>
+      <div><b>权威门</b><span>签核、代工厂、硅测——审的是证据链完不完整，不是模型觉得好不好</span></div>
+    </div>
+
+    <h4>④ RSI 在四个可编辑层上改什么、防什么</h4>
+    <div class="grid2">
+      <div class="mini"><h5>L1 参数层 · 微调 / RL</h5><p>用内部 RTL 与 EDA 反馈做训练。<b>防：</b>奖励黑客（学会骗工具）、工具版本漂移、测试集泄漏。</p></div>
+      <div class="mini"><h5>L2 经验层 · 结构化记忆</h5><p>沉淀"哪种结构容易拥塞、哪种约束容易过紧"。<b>防：</b>把一次性的补丁当成可复用知识。</p></div>
+      <div class="mini"><h5>L3 编排层 · 改 flow</h5><p>先综合还是先仿真、何时做 ECO。<b>防：</b>影响半径太大——要低频、灰度、能回滚。</p></div>
+      <div class="mini"><h5>L4 元层 · 改 DSE / 验证策略</h5><p>下一个设计点采哪、下一个断言生成什么。<b>防：</b>覆盖率游戏——目标必须是多目标 + 因果区分度。</p></div>
+    </div>
+
+    <h4>⑤ 跨层四段因果链 → 一张跨层因果图</h4>
+    <div class="pipe">
+      <div><b>RTL → 网表</b><i>写法会被综合成什么</i></div>
+      <div><b>网表 → 版图</b><i>结构会造成什么物理效应</i></div>
+      <div><b>版图 → 签核</b><i>物理效应如何变成违例</i></div>
+      <div><b>签核 → 硅</b><i>签核与硅测之间的校准曲线</i></div>
+    </div>
+    <p>每做一次综合 / 布局 / 签核，就在图上加一条边；每失败一次，就标一个"此路不通"。作者的判断：<b>这张图比任何单个 RTL 生成模型都值钱</b>。</p>
+
+    <h4>⑥ 例子：时序违例，四种干预（点按钮比较）</h4>
+    <div class="picks" id="chipPicks">
+      <button class="btn" data-k="rtl" type="button">改 RTL</button>
+      <button class="btn" data-k="sdc" type="button">改约束</button>
+      <button class="btn" data-k="fp" type="button">改 floorplan</button>
+      <button class="btn" data-k="cts" type="button">改时钟树</button>
+    </div>
+    <div class="pickout" id="chipOut"><span class="muted">只会"生成 RTL"的系统会直接重写 RTL；会"跨层归因"的系统先问：违例的根因在哪一层？选一个干预看看它的得失。</span></div>
+    <div class="flowline"><span>违例出现</span><em>→</em><span>跨层归因：根因在哪层？</span><em>→</em><span>选"最可能修好、副作用最小"的干预</span><em>→</em><span>先跑便宜验证（仿真 / STA）</span><em>→</em><span>再跑贵验证（形式 / 签核）</span></div>
+
+    <h4>⑦ 要注意的坑</h4>
+    <div class="pits"><span><b>工具版本漂移</b> 换了工艺库，旧经验失效</span><span><b>封闭性</b> 数据不能出域，Harness 要本地跑</span><span><b>形式验证状态爆炸</b> 要会选"证什么"</span><span><b>覆盖率游戏</b> 覆盖率是代理不是目标</span><span><b>PPA 多目标</b> 用 Pareto 前沿 + 业务权重</span><span><b>签核信任</b> 权威门必须在 Harness 之外</span></div>
+    <div class="metric">核心指标：用多少证据，定位了多少跨层因果<small>"生成了多少 RTL"只是过程量</small></div>
+  <div class="pin">芯片的 RSI，是把跨层因果链修得更短、更可观测；"写 RTL 写得更快"只是表面。</div>
+</div>
+</section>
+
+<!-- ============ ACT 12 ============ -->
+<section class="act" id="act-12" data-title="第 12 幕 · 开放工作流">
+<div class="card reveal">
+  <div class="kicker">第 12 幕 · 领域实战 ②</div>
+  <h2>开放工作流：从"任务分派"到"社会因果链"</h2>
+  <div class="script">
+    <p>开放工作流是几个领域里最"开放"的一个，也最容易被写成一张"Router + Worker + 人审"的架构图。但作者认为，难点根本不在"把任务分给谁"，而在<b>"这个决策到底带来了什么结果"</b>。</p>
+    <p>回了一封邮件，客户满意度变了；改了一个流程，团队效率变了；批了一个单，业务指标变了。可这些变化里，有多少是决策带来的，有多少是市场、团队、外部事件带来的？很难说清。作者把这种链条叫<b>社会因果链</b>：长、混杂、共识低。</p>
+    <p>别忘了，开头那封私信里博士生问的 JobBench，正属于这一类任务。所以这一幕，其实是在正面回答那封私信。</p>
+  </div>
+
+  <h4>① 五层：越往下越慢，也越接近真值</h4>
+  <div class="ladder">
+    <div class="rung"><span class="ln">事件层</span><span class="hz">分钟~小时</span><span class="ds">消息、邮件、工单、审批、CI 结果 <i>· 证据："这件事要不要处理"。决定系统会不会被噪声淹没</i></span></div>
+    <div class="rung"><span class="ln">决策层</span><span class="hz">小时~天</span><span class="ds">回复、升级、退款、排期、分派 <i>· 证据："这个决策对不对"。社会因果链从这里开始</i></span></div>
+    <div class="rung"><span class="ln">团队层</span><span class="hz">天~周</span><span class="ds">协作、交接、冲突、复盘 <i>· 证据："团队有没有因此更顺"。决策执行后会不会变形</i></span></div>
+    <div class="rung"><span class="ln">业务层</span><span class="hz">周~月</span><span class="ds">客户满意度、转化率、成本、合规 <i>· 延迟反馈最明显的一层，也最容易被指标游戏</i></span></div>
+    <div class="rung"><span class="ln">客户层</span><span class="hz">月~年</span><span class="ds">长期信任、续约、口碑 <i>· 社会因果链的终点，也是最终的真值</i></span></div>
+  </div>
+  <div class="viz" data-onview="goDilute">
+    <div class="viz-title">同一个决策，传到每一层时还剩多少"能归因给它"的信号</div>
+    <div id="dilute"></div>
+    <p class="small muted">蓝色 = 能归因到这个决策的部分；红色斜纹 = 混杂因素。比例为示意，用来说明趋势，不是原文数据。</p>
+  </div>
+  <p>这五层之间不是"事件 → 决策 → 结果"那么简单：一个好的决策，可能被一个差的市场环境抵消；一个差的决策，也可能被一个强的团队补救。<b>越接近真值的层，信号越弱、来得越晚</b>。RSI 要做的，是把社会因果链变得更可观测、更可干预；在 KPI 上刷分不是目标。</p>
+
+  <h4>② 四种角色：链条上谁在干什么</h4>
+  <p>工作流的模型栈是"角色化模型 + 工具 + 记忆"，而不是"一个大模型 + 一个 prompt"。</p>
+  <div class="viz">
+    <div class="viz-title">点角色看分工（亮起的高光演示一件事在链条上的流转）</div>
+    <div class="rolechain" id="roleChain">
+      <button class="role" data-r="0" style="--i:0" type="button">事件<small>消息 · 工单 · CI</small></button><i aria-hidden="true">→</i>
+      <button class="role" data-r="1" style="--i:1" type="button">Router<small>分诊 · 分派</small></button><i aria-hidden="true">→</i>
+      <button class="role" data-r="2" style="--i:2" type="button">Worker<small>执行</small></button><i aria-hidden="true">→</i>
+      <button class="role" data-r="3" style="--i:3" type="button">Judge<small>评审</small></button><i aria-hidden="true">→</i>
+      <button class="role" data-r="4" style="--i:4" type="button">Human Oracle<small>例外 · 价值判断</small></button>
+    </div>
+    <div class="ledgerbar"><b>证据账本</b>记下决策、理由、结果、混杂、置信度<span>↺ 写回，供下一次决策复用</span></div>
+    <div class="plinfo" id="roleInfo" style="margin-top:12px"></div>
+  </div>
+  <p class="small muted">作者给的 Harness 七件套：事件图 · Router · Worker Session · 人工审核 · 业务 KPI · 合规 / 权限 · 证据账本。事件图记录"谁触发了什么、谁响应了什么、结果是什么"，是后面做反事实的原材料。</p>
+
+  <h4>③ RSI 在四个可编辑层上改什么、防什么</h4>
+  <p>如果说模型是执行者、Harness 是观测器，RSI 就是"控制回路"：</p>
+  <div class="grid2">
+    <div class="mini"><h5>L1 参数层 · 微调</h5><p>用历史工单微调 Worker、用人审数据微调 Judge、用路由日志微调 Router。<b>防：</b>过拟合少数客户 / 场景；评审数据有偏；路由日志有幸存者偏差。</p></div>
+    <div class="mini"><h5>L2 经验层 · 案例库 / playbook</h5><p>沉淀"哪类投诉该退款、哪类客户该升级、哪类问题该转技术"。<b>防：</b>负迁移（A 客户的经验套到 B 客户）、政策漂移（政策变了旧 playbook 失效）、越过责任边界。</p></div>
+    <div class="mini"><h5>L3 编排层 · 路由 / 流程</h5><p>谁先接、谁后接、何时升级、何时并行。<b>防：</b>一个路由改动让某个团队过载；一个流程改动让合规风险上升。</p></div>
+    <div class="mini"><h5>L4 元层 · 评审 / 权威</h5><p>什么算好、谁有权批、什么情况必须人工。<b>防：</b>指标游戏（只看满意度就会过度退款）、权威俘获（Judge 和 Worker 共谋）、合规。</p></div>
+  </div>
+  <p class="small muted">四层各自优化，不等于整体最优——难点在跨层。</p>
+
+  <h4>④ 跨层的关键：反事实回放</h4>
+  <p>工作流不能重来。你没法让同一个客户"再投诉一次"，换一种处理方式看看。只能通过<b>回放、配对、推断</b>去估计"如果当时选了另一个决策，会怎样"。作者给的做法是<b>配对 / 分层 / 倾向性评分</b>：同一类客户、同一类问题、同一时间段，比较不同决策的结果。下面用一组示意数据，看看不做配对会被骗成什么样。</p>
+  <div class="viz" data-onview="goCF">
+    <div class="viz-title">历史工单回放：退款 vs 换货，哪个让客户更满意？（示意数据）</div>
+    <div class="btns" id="cfBtns">
+      <button class="btn on" data-k="naive" type="button">① 直接比较两组</button>
+      <button class="btn" data-k="match" type="button">② 按问题严重度配对</button>
+    </div>
+    <div class="cfwrap naive" id="cfWrap">
+      <div class="cfg g-all"><h6>全部工单</h6><div class="cfb"><div class="r" data-v="82"><span>82</span></div><div class="s" data-v="74"><span>74</span></div></div><div class="cfl"><span>退款</span><span>换货</span></div><div class="gapb">差 <b>+8</b></div></div>
+      <div class="cfg g-m"><h6>轻微问题</h6><div class="cfb"><div class="r" data-v="85"><span>85</span></div><div class="s" data-v="83"><span>83</span></div></div><div class="cfl"><span>退款</span><span>换货</span></div><div class="gapb">差 <b>+2</b></div></div>
+      <div class="cfg g-m"><h6>严重问题</h6><div class="cfb"><div class="r" data-v="70"><span>70</span></div><div class="s" data-v="72"><span>72</span></div></div><div class="cfl"><span>退款</span><span>换货</span></div><div class="gapb">差 <b>−2</b></div></div>
+    </div>
+    <div class="mix" id="cfMix">
+      <div class="small muted" style="margin-bottom:4px">谁拿到了哪种处理？（问题严重度构成）</div>
+      <div class="mixrow"><span>退款组</span><div class="mixbar"><i class="mm" style="width:80%">轻微 80%</i><i class="ms" style="width:20%">20%</i></div></div>
+      <div class="mixrow"><span>换货组</span><div class="mixbar"><i class="mm" style="width:20%">20%</i><i class="ms" style="width:80%">严重 80%</i></div></div>
+    </div>
+    <div class="plinfo" id="cfInfo" style="margin-top:12px"></div>
+  </div>
+  <p>这就是作者那句话的意思：<b>没有反事实，RSI 只看得到"做了什么"，看不到"如果没做会怎样"</b>。一个只会看 KPI 的系统，会从①里学到"多退款"——这正是下面例子里要避免的指标游戏。</p>
+
+  <h4>⑤ 例子：客户投诉，三种决策（点按钮比较）</h4>
+  <div class="picks" id="workPicks">
+    <button class="btn" data-k="refund" type="button">退款</button>
+    <button class="btn" data-k="swap" type="button">换货</button>
+    <button class="btn" data-k="esc" type="button">升级技术排查</button>
+  </div>
+  <div class="pickout" id="workOut"><span class="muted">只会"分派"的系统按规则选一个；会做"社会因果"的系统先看客户历史价值、问题严重度、这一批次的缺陷率、类似客户在不同决策下的结果，再用反事实回放估计"退款 / 换货 / 升级"各自的满意度、成本和复购率，选长期最优的那个。</span></div>
+  <p class="small">它还会把这次决策的理由、客户的反应、后续的复购或再投诉记进证据账本；下一次遇到类似客户，就用这条证据更新 playbook。</p>
+
+  <h4>⑥ 要注意的坑</h4>
+  <div class="pits"><span><b>混杂</b> 满意度变化可能来自市场、竞品、季节——用配对 / 分层 / 倾向性评分控制</span><span><b>低共识</b> 不同人对"好决策"定义不同——把 KPI、合规、客户长期价值放在一起看</span><span><b>延迟反馈</b> 业务结果可能几周、几个月后才出现——不能"当天没涨就算失败"</span><span><b>权威</b> 合规、法律、人事决策必须由人做，权威门在 Harness 之外</span><span><b>指标游戏</b> 只看满意度会过度退款，只看成本会踢皮球</span></div>
+  <div class="metric">核心指标：用多少证据，排除了多少错误归因<small>"处理了多少工单""分派得多快"只是过程量</small></div>
+
+  <h3>两个领域，翻译成同一种 RSI 语言</h3>
+  <p>作者在每一章末尾都会把领域"翻译成 RSI 的语言"。放在一起看，结构惊人地一致：</p>
+  <div class="tscroll"><table class="cmp">
+    <tr><th></th><th>芯片研发</th><th>开放工作流</th></tr>
+    <tr><td>改什么</td><td>RTL、约束、floorplan、flow</td><td>决策、playbook、路由</td></tr>
+    <tr><td>保留什么</td><td>设计模式、失败设计、验证技能、EDA 脚本</td><td>案例、结果、复盘、业务 KPI</td></tr>
+    <tr><td>再用于</td><td>下一代设计与签核</td><td>下一次决策</td></tr>
+    <tr><td>递归度</td><td>d = 0 或半递归</td><td>d = 0 或半递归</td></tr>
+    <tr><td>主要改哪阶</td><td>L2 经验 + L3 编排，偶尔 L1</td><td>L2 经验 + L3 编排</td></tr>
+    <tr><td>验证器</td><td>仿真、形式、STA、DRC/LVS、硅测</td><td>人审、业务指标、反事实回放</td></tr>
+    <tr><td>权威门</td><td>签核、代工厂</td><td>业务负责人、合规</td></tr>
+    <tr><td>核心指标</td><td>用多少证据定位多少跨层因果</td><td>用多少证据排除多少错误归因</td></tr>
+  </table></div>
+  <p>共同点只有一条：<b>验证器和权威门都站在循环外面</b>，系统主要在 L2 / L3 上递归。这正是"可递归边界"在真实领域里的样子。</p>
+  <div class="pin">工作流的 RSI，是把社会因果链变得更可观测、更可干预；"分派得更快"只是表面。</div>
+</div>
+</section>
+
+<!-- ============ ACT 13 ============ -->
+<section class="act" id="act-13" data-title="第 13 幕 · 因果引擎">
+<div class="card reveal">
+  <div class="kicker">第 13 幕 · 通用架构</div>
+  <h2>把所有领域收进一张图：因果引擎</h2>
+  <div class="script">
+    <p>讲完几个领域，作者试着把它们收进同一张图。注意，这不是"Agent 框架图"，也不是"数据流图"，而是一张<b>因果引擎图</b>：中间是因果引擎，左边是代理，右边是真实，下面是证据账本，上面是权威门。五个部件围成一个循环，转得越快、越稳，领域 RSI 就越强。</p>
+    <p>三个要点：<b>第一</b>，因果引擎不是"更大的 Agent"，它的核心是"因果图 + 干预接口 + 实验设计"，它要回答：我能改什么？改了影响什么？下一个实验测什么？<b>第二</b>，代理是"可逆实验场"——价值在于让你不付真实代价就能试很多次。<b>第三</b>，权威门不是单点"审批"，而是一条贯穿全局的<b>因果审计链</b>：结论怎么来的？有没有反事实？控没控混杂？跨环境验没验？</p>
+  </div>
+  <div class="viz">
+    <div class="viz-title">因果引擎：五个部件围成一个循环</div>
+    <svg class="eng" viewBox="0 0 600 380" role="img" aria-label="因果引擎示意图">
+      <path class="fl" d="M180 190 L222 190"/>
+      <path class="fl" d="M378 190 L420 190"/>
+      <path class="fl" d="M300 232 L300 282"/>
+      <path class="fl" d="M118 222 C 118 320, 180 320, 214 318"/>
+      <path class="fl" d="M386 318 C 470 318, 482 300, 482 222"/>
+      <path class="fl au" d="M300 96 L300 148"/>
+      <text class="el" x="200" y="180">可逆试验</text>
+      <text class="el" x="400" y="180">真实验证</text>
+      <text class="el" x="338" y="262">写入证据</text>
+      <text class="el" x="140" y="338">校准代理</text>
+      <text class="el" x="470" y="338">更新因果图</text>
+      <text class="el au" x="358" y="126">因果审计</text>
+      <rect class="box" x="210" y="36" width="180" height="60"/><text class="t1" x="300" y="62">权威门</text><text class="t2" x="300" y="82">审"证据链完不完整"</text>
+      <rect class="box" x="30" y="158" width="150" height="64"/><text class="t1" x="105" y="184">代理</text><text class="t2" x="105" y="204">可逆、便宜、快</text>
+      <rect class="core" x="222" y="148" width="156" height="84"/><text class="t1" x="300" y="180" style="fill:var(--coral)">因果引擎</text><text class="t2" x="300" y="200">因果图 · 干预接口</text><text class="t2" x="300" y="216">实验设计</text>
+      <rect class="box" x="420" y="158" width="150" height="64"/><text class="t1" x="495" y="184">真实</text><text class="t2" x="495" y="204">不可逆、贵、慢</text>
+      <rect class="box" x="214" y="282" width="172" height="64"/><text class="t1" x="300" y="308">证据账本</text><text class="t2" x="300" y="328">一张 DAG，不是一堆日志</text>
+    </svg>
+  </div>
+  <div class="pin">工具可以换，模型可以换，但"干预—代理—证据—权威"这个因果循环要一直转下去，后续的 RSI 才有地基。</div>
+</div>
+</section>
+
+<!-- ============ ACT 14 ============ -->
+<section class="act" id="act-14" data-title="第 14 幕 · 六个工程模块">
+<div class="card reveal">
+  <div class="kicker">第 14 幕 · 工程落地</div>
+  <h2>如果明天就要动手：先写这六个模块</h2>
+  <div class="script">
+    <p>作者说自己转型做 FDE（驻场工程师）的第五个月。如果让他进企业做一个长期的领域 RSI 项目，他<b>不会先去搭一个大而全的通用 Agent 框架</b>，而是先写六个模块。它们和前作《路由之桥》里的模块有重叠，但重心从"路由"挪到了"因果"。</p>
+    <p>每个模块旁边都标了"它不是什么"——这正是理解它的捷径。</p>
+  </div>
+  <div class="mods">
+    <div class="mod reveal"><span class="no">01</span><h5>因果图构建器</h5><p>节点是变量（RTL 结构、客户决策…），边是因果假设。不必一开始完美，但必须可更新：每次实验都是对它的一次检验。</p><span class="vs">不是"工具图"</span></div>
+    <div class="mod reveal"><span class="no">02</span><h5>干预 API</h5><p>回答"能改什么、改完怎么观察"。芯片里是改 RTL / 约束 / floorplan，工作流里是改决策 / 流程 / 话术。</p><span class="vs">不是"工具 API"（那只回答能调用什么）</span></div>
+    <div class="mod reveal"><span class="no">03</span><h5>代理管理器</h5><p>管理不同保真度的代理、校准它们、按证据几何分配预算。核心指标是"单位成本的信息增益"。</p><span class="vs">不是"一个仿真器"</span></div>
+    <div class="mod star reveal"><span class="no">04</span><h5>实验设计器</h5><p>选下一个实验：哪个最能区分假设？最能降低不确定性？最可能推翻当前因果图？贝叶斯实验设计、主动学习、因果推断的交叉地带。</p><span class="vs">最容易被忽略的一个</span></div>
+    <div class="mod reveal"><span class="no">05</span><h5>因果证据账本</h5><p>每条证据记录干预、结果、反事实、控制了哪些混杂、置信度。要能回答"去掉这条证据，结论还成立吗"。</p><span class="vs">不是"日志"，是一张 DAG</span></div>
+    <div class="mod reveal"><span class="no">06</span><h5>权威门</h5><p>检查证据链、反事实、混杂控制、跨环境验证。高风险领域必须放在 Harness 之外；低风险可以内嵌，但要有日志和回滚。</p><span class="vs">不是"审批按钮"，是因果审计器</span></div>
+  </div>
+  <p style="margin-top:18px">作者也提到这和当下 Harness 生态的方向对得上：插件化（一切皆插件）、协议化（统一 Harness 接口）、路由化（Router + Worker + 事件驱动）。但他补了关键的一句：</p>
+  <div class="vsbar">
+    <div class="a"><b>插件化 · 协议化 · 路由化</b>解决的是"接得上"<br><span class="small muted">没有因果化，插件越多，越容易在代理里自嗨</span></div>
+    <div class="b"><b>因果化</b>解决的是"学得对"<br><span class="small muted">有了因果化，插件越多，越能在真实世界里做实验</span></div>
+  </div>
+  <div class="pin">这也是 RSI 与一般 Harness / Loop 工程最大的不同：不止要"跑通"，还要"学对"。</div>
+</div>
+</section>
+
+<!-- ============ ACT 15 ============ -->
+<section class="act" id="act-15" data-title="第 15 幕 · E 级 × C 级">
+<div class="card reveal">
+  <div class="kicker">第 15 幕 · 评价与治理</div>
+  <h2>两把尺子：证据够不够（E），因果强不强（C）</h2>
+  <div class="script">
+    <p>作者在前作里给 RSI 定过五级证据 <b>E0–E4</b>：从一个 demo 单例，到单轮基准增益，到匹配预算并看保留率，到跨任务族迁移加独立验证，再到改进速率本身的复利增长。但它只回答"证据够不够"，没回答"因果强不强"。</p>
+    <p>所以本文再加一把尺子 <b>C0–C4</b>：相关 → 受控干预 → 反事实 / 配对 → 跨环境 → 机制。两把尺子要一起看：一个系统可能在 E3 上很漂亮却只到 C0——在很多任务上涨了分，却说不清为什么；另一个可能只到 E1 却到了 C3——只做了一个任务，但因果验得很扎实。</p>
+  </div>
+  <div class="viz" data-onview="goEC">
+    <div class="viz-title">各领域在两把尺子上的位置（点按钮聚焦）</div>
+    <div class="btns ecbtns" id="ecBtns">
+      <button class="btn" data-k="code" style="--c:var(--code)" type="button">Coding</button>
+      <button class="btn" data-k="job" style="--c:var(--gold)" type="button">JobBench</button>
+      <button class="btn" data-k="chip" style="--c:var(--chip)" type="button">芯片</button>
+      <button class="btn" data-k="bio" style="--c:var(--bio)" type="button">生命科学</button>
+      <button class="btn ghost" data-k="all" type="button">全部</button>
+    </div>
+    <svg id="ec" class="ec" viewBox="0 0 600 330" role="img" aria-label="E级与C级二维图"></svg>
+    <div class="plinfo" id="ecInfo" style="margin-top:10px">横轴 E 级看"证据够不够"，纵轴 C 级看"因果强不强"。点上面的按钮聚焦一个领域。</div>
+  </div>
+  <p>读这张图的关键：不同领域对因果证据的要求本来就不一样。Coding 因果链短、回滚便宜，到 C1–C2 就够用；芯片流片不可逆，要求 C2–C3；JobBench 的社会因果链太长太混杂，目前大多停在 C0–C1。它需要的是<b>更好的因果设计</b>：反事实回放、配对任务、业务指标、人审 oracle。否则 JobBench 上的 RSI 只能学会"怎么让评委满意"，学不会"怎么让业务变好"。</p>
+  <div class="pin">领域 RSI 成熟到哪一步，要看因果证据到了哪一级；"涨了多少分"只是表象。</div>
+</div>
+</section>
+
+<!-- ============ ACT 16 ============ -->
+<section class="act" id="act-16" data-title="第 16 幕 · 路线图">
+<div class="card reveal">
+  <div class="kicker">第 16 幕 · 先做什么，后做什么</div>
+  <h2>路线图：先做实验设计器，再做生成器</h2>
+  <div class="script">
+    <p>作者的答案可能让人意外：<b>先做实验设计器，再做生成器</b>。领域 RSI 的瓶颈是"不知道该测什么"，而不是"生成不出候选"。会设计实验的系统，哪怕生成能力一般，也能在长因果链里持续进步；只会生成、不会设计实验的系统，生成得越多，浪费得越多。</p>
+    <p>落地分三关，像打游戏一样逐级加难。三关不是严格串行：因果引擎的骨架做一次，可以复用；领域适配器可以并行开发。但<b>别一上来就做"通用领域 RSI"</b>——通用是结果，不是起点。</p>
+  </div>
+  <div class="road">
+    <div class="stage reveal"><span class="lvtag" style="background:var(--bio)">EASY</span><h5>Coding / Terminal：练"因果闭环"</h5><p class="r"><b>目标</b>把"干预 → 证据 → 更新"跑通：干预 API、证据账本、反事实回放、因果图更新。</p><p class="r"><b>新习惯</b>改一个变量，验证一个因果假设</p><p class="r old">改一堆变量，看分数涨不涨</p></div>
+    <div class="stage reveal"><span class="lvtag" style="background:var(--gold)">MEDIUM</span><h5>开放工作流：练"社会因果"</h5><p class="r"><b>目标</b>加进事件图、反事实回放、人审 oracle、业务指标。</p><p class="r"><b>新习惯</b>在长链、低共识、多方利益的环境里做因果推断</p><p class="r old">在 rubric 上刷分</p></div>
+    <div class="stage reveal"><span class="lvtag" style="background:var(--coral)">HARD</span><h5>芯片等复杂封闭域：练"代理—真实共进化"</h5><p class="r"><b>目标</b>加进多保真度代理、实验设计、因果审计、权威门。</p><p class="r"><b>新习惯</b>用便宜的代理做实验，用昂贵的真实做校准</p><p class="r old">在仿真里自嗨</p></div>
+  </div>
+  <div class="pin">只给一个建议：先找到领域里"最值得做的那个判别性实验"，然后围绕它设计 RSI——不是围绕模型，也不是围绕工具。</div>
+</div>
+</section>
+
+<!-- ============ ACT 17 ============ -->
+<section class="act" id="act-17" data-title="终幕 · 三句话">
+<div class="card reveal">
+  <div class="kicker">终幕 · 结论</div>
+  <h2>如果只能记住三句话</h2>
+  <div class="three">
+    <div class="reveal"><span class="big">1</span><div><h5>瓶颈在三个变量，不在模型</h5><p>领域 RSI 卡在因果视界、证据几何、可递归边界。模型会更迭，而看清这三样，现阶段更依赖专业的领域知识与经验。</p></div></div>
+    <div class="reveal"><span class="big">2</span><div><h5>核心资产是循环和账本</h5><p>"代理—真实"的共进化循环，加上因果证据账本。模型会过时，这套体系会越用越值钱。</p></div></div>
+    <div class="reveal"><span class="big">3</span><div><h5>第一性应用是设计判别性实验</h5><p>生成是廉价的，实验是昂贵的。把昂贵的实验设计对，才是领域 RSI 真正的杠杆。</p></div></div>
+  </div>
+  <h3>回到那位博士生的问题</h3>
+  <div class="script">
+    <p>"能不能用 coding / terminal 覆盖开放任务的搜索空间？"作者最后的回答是：<b>能覆盖一部分，覆盖不了全部</b>。因为开放任务的难点不在"生成"，而在"因果"——能不能做对的干预、设计对的实验、画清对的边界。这些东西，coding 能模拟一部分，模拟不了全部。</p>
+    <p>作者也坦白：这些概念是他读论文、做项目、和一线研究者聊天时的阶段性抽象，不是定理，将来可能被证伪。如果它能让你下次设计领域 RSI 时多问一句"这个实验能不能区分假设"，就值了。</p>
+  </div>
+  <h3>这篇在"RSI 桥"系列里的位置</h3>
+  <div class="series">
+    <div><b>递归之桥</b>怎么修桥</div>
+    <div><b>正则之桥</b>怎么设关卡</div>
+    <div><b>路由之桥</b>怎么定交通规则</div>
+    <div><b>本篇</b>桥修到真实世界，先看清因果的河床</div>
+  </div>
+</div>
+</section>
+
+<!-- ============ ACT 18 ============ -->
+<section class="act" id="act-18" data-title="下一站 · 用这把尺子看 Harness²">
+<div class="card reveal">
+  <div class="kicker">下一站 · 预告</div>
+  <h2>用这篇的尺子，先量一量 Harness²</h2>
+  <p>开头那段私信里，作者提到的正是 Google 的 Harness²。后面两篇讲稿会专门拆它，最后一篇做体系总结。这里先放一张"量尺预览"，带着这几个问题往下读：</p>
+  <div class="tscroll"><table class="cmp">
+    <tr><th>本篇的尺子</th><th>放到 Harness² 上（预览，细节见后续讲稿）</th></tr>
+    <tr><td>改的是哪一阶</td><td>L2 / L3：八类运行时组件文件（系统提示、护栏、记忆、技能、工具说明、脚本、子 Agent、插件），模型权重不动</td></tr>
+    <tr><td>递归度</td><td>执行 Harness 被改，"改进 Harness"的经验库也随任务更新；但最终挑选与评测不在可改范围内 → 接近"半递归"</td></tr>
+    <tr><td>证据是什么</td><td>Probe：同任务、同模型、同环境，只换 Harness 再跑一次——形式上就是一次受控干预；但没有标准答案，只能证明"行为变了"，不能证明"做对了"</td></tr>
+    <tr><td>证据几何</td><td>JobBench 这类开放任务：低保真、低共识——正是本文说"JobBench 的 RSI 还很早期"的原因</td></tr>
+    <tr><td>可递归边界</td><td>护栏（guardrails）也在可编辑组件里——边界怎么画，是第二篇重点讨论的工程问题</td></tr>
+  </table></div>
+  <p class="small muted" style="margin-top:14px">后续几篇讲稿暂未公开。</p>
+</div>
+</section>
+</main>
+
+<footer>
+  <div class="card">
+    <b>出处与说明</b><br>
+    原文：吕明 · 塔罗烩《当RSI进入「AI4S&amp;AI4Chip」领域深水区，因果视界、证据几何与可递归边界的重要性》（微信公众号）。本页是学习用的解读讲稿：口播稿为转述，所有图示、雷达形状、小游戏中的天数与成本均为示意，不是原文数据。原文第八章的生命科学细节按读者要求略去。
+  </div>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="tocDrawer" aria-label="目录">
+  <header><b>目录</b><button type="button" data-close>关闭</button></header>
+  <div class="body toc" id="tocBody"></div>
+</aside>
+<aside class="drawer" id="glossDrawer" aria-label="术语表">
+  <header><b>术语速查</b><button type="button" data-close>关闭</button></header>
+  <div class="body"><dl>
+    <dt>RSI · 递归自我改进</dt><dd>系统修改自己、保留改动、再用改过的自己产生下一次修改。三步缺一不可。</dd>
+    <dt>Harness</dt><dd>包在模型外面的整套运行环境：系统提示、工具、记忆、技能、子 Agent 编排、护栏等。</dd>
+    <dt>递归度 d</dt><dd>d = 0：只改组件，验证器在循环外；半递归：产生改动的机制被改，判定机制没改；d ≥ 1：验证器也进了循环。</dd>
+    <dt>四座桥</dt><dd>DNN 能训练的四个前提：结构桥（归因）、传导桥（可微）、分布桥（泛化）、时间桥（信用）。RSI 把它们都拆了。</dd>
+    <dt>剪刀差</dt><dd>能力越强、任务越难，可验证性预算反而越紧。RSI 有效学习率 ≈ 可验证性 ÷ 任务难度。</dd>
+    <dt>L1–L4 四阶</dt><dd>参数阶（权重）、经验阶（上下文/记忆/技能）、编排阶（Harness 代码/工作流）、元阶（更新器/验证器/评委）。</dd>
+    <dt>因果视界</dt><dd>从动作到可观察结果之间的距离，以及中间插入的混杂因素的多少。</dd>
+    <dt>信用分配</dt><dd>结果变了，应该把功劳 / 责任记在哪个改动上。因果视界越长越难。</dd>
+    <dt>证据几何</dt><dd>验证能力的五维形状：密度、保真度、及时性、可负担性、共识。</dd>
+    <dt>证据组合</dt><dd>便宜代理先筛 → 昂贵真值确认 → 外部审计兜底。证据是设计出来的。</dd>
+    <dt>see(X) / do(X)</dt><dd>观测 vs 干预。观测只看到"一起变"，干预能剪断混杂、看到真正的因果效果。</dd>
+    <dt>反事实</dt><dd>"如果当时没改 / 选了另一个，会怎样"。工作流里靠回放、配对、倾向性评分来估计。</dd>
+    <dt>可递归边界</dt><dd>系统可以自己改的范围。内圈可改、中圈要证据、外圈要授权。</dd>
+    <dt>权威俘获</dt><dd>边界画得太松时，系统去改测试、改签核标准、改 KPI，学会"让指标好看"而不是"让事情变好"。</dd>
+    <dt>代理—真实循环</dt><dd>真实校准代理 → 代理生成候选 → 设计判别性实验 → 真实实验 → 证据账本写回。</dd>
+    <dt>代理游戏</dt><dd>代理不被持续校准时，系统在代理里刷分，到真实世界翻车。</dd>
+    <dt>判别性实验</dt><dd>不同假设会预言不同结果的实验。只有它能真正改变你的信念。</dd>
+    <dt>因果引擎</dt><dd>因果图 + 干预接口 + 实验设计，被代理、真实、证据账本、权威门环绕。</dd>
+    <dt>E 级 / C 级</dt><dd>E0–E4 看"证据够不够"；C0–C4（相关、受控干预、反事实、跨环境、机制）看"因果强不强"。</dd>
+    <dt>JobBench</dt><dd>真实职业工作流类基准，评判依赖人和 rubric，可验证性远低于 coding。</dd>
+    <dt>PPA / STA / 签核</dt><dd>芯片术语：性能-功耗-面积；静态时序分析；流片前的最终检查与签字。</dd>
+  </dl></div>
+</aside>
+<style>
+path.eng.fl{fill:none;stroke-dasharray:7 6;animation:dashmove 1.1s linear infinite}
+.bd.tight .inner-items{opacity:0}
+.bubbles{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+</style>
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
+function clamp(x,a,b){return Math.max(a,Math.min(b,x))}
+function ease(t){return 1-Math.pow(1-t,3)}
+function tween(dur,fn,done){if(reduce){fn(1);if(done)done();return}var t0=performance.now();function f(now){var t=clamp((now-t0)/dur,0,1);fn(ease(t));if(t<1)requestAnimationFrame(f);else if(done)done()}requestAnimationFrame(f)}
+function seg(group,btnSel,cb){var bs=$$(btnSel,group);bs.forEach(function(b){b.addEventListener('click',function(){bs.forEach(function(x){x.classList.toggle('on',x===b)});cb(b)})})}
+
+/* ---------- theme ---------- */
+var root=document.documentElement,tb=$('#btnTheme');
+function applyTheme(t){if(t)root.setAttribute('data-theme',t);else root.removeAttribute('data-theme');tb.textContent=t==='dark'?'● 深色':t==='light'?'○ 浅色':'◐ 自动'}
+applyTheme(ls('rsi-theme'));
+tb.addEventListener('click',function(){var c=root.getAttribute('data-theme');var n=!c?'dark':c==='dark'?'light':null;ls('rsi-theme',n);applyTheme(n)});
+
+/* ---------- bubbles ---------- */
+var bw=document.createElement('div');bw.className='bubbles';document.body.appendChild(bw);
+for(var i=0;i<16;i++){var b=document.createElement('span');b.className='bubble';var s=4+Math.random()*12;b.style.width=b.style.height=s+'px';b.style.left=(Math.random()*100)+'%';b.style.animationDuration=(14+Math.random()*18)+'s';b.style.animationDelay=(-Math.random()*30)+'s';bw.appendChild(b)}
+
+/* ---------- scroll: progress, sea, gauge ---------- */
+var bar=$('#bar'),sea=$('#seaDeep'),gD=$('#gDepth'),gM=$('#gMark'),gA=$('#gAct');
+var acts=[$('#top')].concat($$('section.act'));
+function curIndex(){var idx=0;for(var i=0;i<acts.length;i++){if(acts[i].getBoundingClientRect().top<=window.innerHeight*0.35)idx=i}return idx}
+function onScroll(){var h=document.documentElement.scrollHeight-window.innerHeight;var p=h>0?clamp(window.scrollY/h,0,1):0;bar.style.width=(p*100)+'%';sea.style.opacity=(clamp((p-0.12)/0.75,0,1)*0.92).toFixed(3);gD.textContent=Math.round(p*1200);gM.style.top=(p*186)+'px';var i=curIndex();gA.textContent=i===0?'海面 · 开场':(acts[i].getAttribute('data-title')||'')}
+window.addEventListener('scroll',onScroll,{passive:true});window.addEventListener('resize',onScroll);onScroll();
+
+/* ---------- keyboard ---------- */
+document.addEventListener('keydown',function(e){if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;if(e.metaKey||e.ctrlKey||e.altKey)return;var k=e.key;var d=(k==='j'||k==='J'||k==='ArrowRight')?1:(k==='k'||k==='K'||k==='ArrowLeft')?-1:0;if(!d)return;e.preventDefault();var i=clamp(curIndex()+d,0,acts.length-1);acts[i].scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'})});
+
+/* ---------- drawers ---------- */
+var scrim=$('#scrim');
+function openD(id){closeD();$(id).classList.add('open');scrim.classList.add('open')}
+function closeD(){$$('.drawer').forEach(function(d){d.classList.remove('open')});scrim.classList.remove('open')}
+$('#btnToc').addEventListener('click',function(){openD('#tocDrawer')});
+$('#btnGloss').addEventListener('click',function(){openD('#glossDrawer')});
+scrim.addEventListener('click',closeD);$$('[data-close]').forEach(function(b){b.addEventListener('click',closeD)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeD()});
+var tb2=$('#tocBody');tb2.innerHTML='<a href="#top"><small>00</small>开场 · 到底什么让领域"可 RSI"</a>'+$$('section.act').map(function(s,i){return '<a href="#'+s.id+'"><small>'+String(i+1).padStart(2,'0')+'</small>'+s.getAttribute('data-title')+'</a>'}).join('');
+$$('a',tb2).forEach(function(a){a.addEventListener('click',closeD)});
+
+/* ---------- reveal & onview ---------- */
+var onview={drawScissors:drawScissors,goFan:goFan,goEC:goEC,goDilute:goDilute,goCF:goCF};
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;var el=e.target;if(el.dataset.onview){var f=onview[el.dataset.onview];el.removeAttribute('data-onview');if(f)f();}else{el.classList.add('shown')}io.unobserve(el)})},{threshold:0,rootMargin:'0px 0px -6% 0px'});
+$$('.reveal,.rung,[data-onview]').forEach(function(el){io.observe(el)});
+
+/* ---------- hero ---------- */
+(function(){var q=$('#typeQ'),txt='到底是什么，让一个领域变得「可 RSI」？';var chips=$$('.hero .chip.s'),laters=$$('.hero .later');
+function after(){chips.forEach(function(c,i){setTimeout(function(){c.classList.add('struck')},reduce?0:350+i*380)});laters.forEach(function(l,i){setTimeout(function(){l.classList.add('shown')},reduce?0:1600+i*420)})}
+if(reduce){q.textContent=txt;after();return}var n=0;var t=setInterval(function(){n++;q.textContent=txt.slice(0,n);if(n>=txt.length){clearInterval(t);after()}},85)})();
+
+/* ---------- act1: loop modes ---------- */
+var MODES={
+ self:{on:[1,0,0],arcs:[0,0,0],recur:false,core:['改进机制','人写死，不变'],name:'自我修订',rows:[['修改','✓ 任务中途改草稿、换工具、调计划'],['保留','✗ 任务一结束就丢了'],['再用','✗ 下次还是从原样开始'],['典型','任务内重写草稿']],judge:'不存在递归——这只是"临场发挥"。'},
+ persist:{on:[1,1,1],arcs:[1,1,1],recur:false,core:['改进机制','人写死，不变'],name:'持久改进',rows:[['修改','✓'],['保留','✓ 改好的技能、记忆存下来'],['再用','✓ 下次接着用'],['典型','大多数 skill / memory 方法']],judge:'<b>判定权在人手里</b>：怎么改、怎么判是事先写死的，系统只是在既定轨道上跑得更远。'},
+ recur:{on:[1,1,1],arcs:[1,1,1],recur:true,core:['改进机制','也在被改进'],name:'递归改进',rows:[['修改','✓'],['保留','✓'],['再用','✓ 并用改过的自己产生下一次修改'],['典型','自指代码、评估器共进化']],judge:'<b>判定权进入了循环</b>：改进者本身也被改进。新问题随之出现——谁来验证验证者？'}};
+function setMode(m){var d=MODES[m];['#nM','#nK','#nR'].forEach(function(s,i){$(s).classList.toggle('off',!d.on[i])});['#arcA','#arcB','#arcC'].forEach(function(s,i){$(s).classList.toggle('off',!d.arcs[i])});$('#loopSvg').classList.toggle('recur',d.recur);$('#coreT1').textContent=d.core[0];$('#coreT2').textContent=d.core[1];$('#runner').style.opacity=m==='self'?0:1;
+$('#modeInfo').innerHTML='<h5>'+d.name+'</h5>'+d.rows.map(function(r){return '<div class="row"><span>'+r[0]+'</span><span>'+r[1]+'</span></div>'}).join('')+'<div class="judge">'+d.judge+'</div>'}
+seg($('#modeBtns'),'.btn',function(b){setMode(b.dataset.m)});setMode('persist');
+var DTXT={zero:'<b>d = 0</b>：只有组件（prompt、技能、代码）在可编辑集合里。改动生成器和验证器都站在循环外面，是稳定的外部锚。',half:'<b>半递归</b>：产生改动的机制也被改了，但判定改动的验证器没动。比 d = 0 强，但仍然有一个外部锚。',one:'<b>d ≥ 1</b>：验证器也被关进了循环。系统开始学习"怎么让自己看起来更好"——必须回答：<b style="color:var(--coral)">谁来验证验证者？</b>'};
+seg($('#dBtns'),'.btn',function(b){$('#dset').setAttribute('data-d',b.dataset.d);$('#dexp').innerHTML=DTXT[b.dataset.d]});$('#dexp').innerHTML=DTXT.zero;
+
+/* ---------- act2: bridges & scissors ---------- */
+$$('.bridge').forEach(function(b){b.addEventListener('click',function(){b.classList.toggle('flipped')})});
+var broken=false;$('#breakAll').addEventListener('click',function(){broken=!broken;this.textContent=broken?'重建四座桥':'一键拆桥';$$('.bridge').forEach(function(b,i){setTimeout(function(){b.classList.toggle('flipped',broken)},i*260)})});
+(function(){['#capLine','#verLine'].forEach(function(s){var p=$(s),L=p.getTotalLength();p.style.strokeDasharray=L;p.style.strokeDashoffset=reduce?0:L})})();
+function drawScissors(){['#capLine','#verLine'].forEach(function(s,i){var p=$(s);p.style.transition='stroke-dashoffset 1.6s ease '+(i*0.25)+'s';p.style.strokeDashoffset=0});['#gapFill','#gapText','#gapText2'].forEach(function(s){var e=$(s);e.style.transition='opacity .8s ease 1.7s';e.setAttribute('opacity',1);e.style.opacity=1})}
+
+/* ---------- act5: causal chain ---------- */
+var CHAIN={
+ code:{c:'var(--code)',nodes:['改一行代码','编译 / 跑测试','行为结果'],conf:[],hz:'分钟级',w:12,credit:1,ct:'局部：测试挂了，能直接定位到函数、行、分支',marks:['单元测试','CI 检查']},
+ chip:{c:'var(--chip)',nodes:['改 RTL','综合','布局布线','签核','硅测'],conf:['工具版本','工艺角','电压 / 温度','布局拥塞'],hz:'小时 → 月',w:62,credit:3,ct:'跨层：改的是逻辑，问题可能出在物理层',marks:['功能仿真','形式验证','静态时序分析 STA']},
+ bio:{c:'var(--bio)',nodes:['改一个设计变量','制备','测量','多层环境','最终表现'],conf:['实验批次','环境状态','样本差异','个体差异'],hz:'周 → 年',w:94,credit:5,ct:'分散：结果变了，很难说清是改动起效还是批次更好',marks:['低成本前置实验','分阶段评估']},
+ work:{c:'var(--work)',nodes:['改一个决策','团队执行','客户反应','业务指标'],conf:['团队激励','市场 / 竞品','客户情绪'],hz:'周 → 月',w:75,credit:4,ct:'社会性：结果里混着团队、市场和运气',marks:['领先指标','客户反馈','复盘记录']}};
+function renderChain(k){var d=CHAIN[k],row=$('#chainRow');row.style.setProperty('--dc',d.c);var h='';d.nodes.forEach(function(n,i){h+='<div class="cnode" style="animation-delay:'+(i*0.16)+'s">'+n+'</div>';if(i<d.nodes.length-1){var cf=d.conf[i];h+='<div class="carrow" style="animation-delay:'+(i*0.16+0.08)+'s">'+(cf?'<span class="conf" style="animation-delay:'+(0.7+i*0.28)+'s,'+(1.4+i*0.28)+'s">'+cf+'</span>':'')+'</div>'}});row.innerHTML=h+(d.conf.length?'':'');
+ var cl=$('#confList');cl.innerHTML=d.conf.length?d.conf.map(function(c){return '<span>混杂：'+c+'</span>'}).join(''):'<span style="color:var(--bio);border-color:var(--bio)">几乎没有干扰插进来</span>';
+ if(!d.conf.length){row.insertAdjacentHTML('afterend','')}
+ $('#hzText').textContent=d.hz;var hb=$('#hzBar');hb.style.width='0';requestAnimationFrame(function(){requestAnimationFrame(function(){hb.style.width=d.w+'%'})});
+ $$('#creditDots i').forEach(function(x,i){x.classList.toggle('f',i<d.credit)});$('#creditText').textContent=d.ct;
+ $('#marks').innerHTML=d.marks.map(function(m){return '<span>'+m+'</span>'}).join('')}
+seg($('#chainBtns'),'.btn',function(b){renderChain(b.dataset.k)});renderChain('code');
+
+/* ---------- act6: radar ---------- */
+var AX=['密度','保真度','及时性','可负担性','共识'];var RC=180,RR=118;
+var RD={code:[4.8,4.8,4.9,4.7,4.8],chip:[2.6,4.7,1.6,1.4,4.6],bio:[1.4,3,1.2,1.1,3],work:[3,1.6,3,3,1.5]};
+var RCOL={code:'var(--code)',chip:'var(--chip)',bio:'var(--bio)',work:'var(--work)'};
+var RNAME={code:'Coding',chip:'芯片',bio:'生命科学',work:'开放工作流'};
+var RSTRAT={code:['高频 · 小步 · 快回滚','雷达几乎是满的：证据多、准、快、便宜、大家都认。一天可以试一百次，错了马上撤回。'],chip:['低频 · 大步 · 强证据','形式验证和签核非常可信，但慢且贵。一次改动要跑完仿真、综合、STA、形式验证，最后还要等流片。'],bio:['更低频 · 更强证据 · 更重治理','实验慢、贵、有噪声，后段更慢更难。必须让每一次实验都尽可能有信息量。'],work:['人审 + 业务指标 + 证据账本','人审和业务指标都很模糊，不同人对"做得好"的定义不一样，不能只靠 LLM 当评委。'],all:['同一句"验证通过"，四种形状','这张图不是在比谁更好，而是说明：每个领域都需要一套与自己证据形状相匹配的 RSI 节奏。']};
+function pt(i,v){var a=(-90+i*72)*Math.PI/180;return [RC+Math.cos(a)*RR*v/5,RC+Math.sin(a)*RR*v/5]}
+function ptsStr(vals){return vals.map(function(v,i){return pt(i,v).map(function(n){return n.toFixed(1)}).join(',')}).join(' ')}
+var NS='http://www.w3.org/2000/svg';function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+var rsvg=$('#radar');for(var g=1;g<=5;g++)el('polygon',{points:ptsStr([g,g,g,g,g]),class:'grid'},rsvg);
+AX.forEach(function(a,i){var p=pt(i,5);el('line',{x1:RC,y1:RC,x2:p[0],y2:p[1],class:'axis'},rsvg);var q=pt(i,6.1);var t=el('text',{x:q[0],y:q[1],class:'lab'},rsvg);t.textContent=a});
+var allP={};Object.keys(RD).forEach(function(k){var p=el('polygon',{points:ptsStr(RD[k]),class:'poly'},rsvg);p.style.fill=RCOL[k];p.style.fillOpacity=.10;p.style.stroke=RCOL[k];p.style.opacity=0;p.style.transition='opacity .5s';allP[k]=p});
+var mainP=el('polygon',{points:ptsStr([0,0,0,0,0]),class:'poly'},rsvg);mainP.style.fillOpacity=.22;var cur=[0,0,0,0,0];
+function setRadar(k){var s=$('#strat');if(k==='all'){mainP.style.opacity=0;Object.keys(allP).forEach(function(x){allP[x].style.opacity=1});s.innerHTML='<div class="kicker">四域叠加</div><div class="tagline">'+RSTRAT.all[0]+'</div><p>'+RSTRAT.all[1]+'</p><div class="legend4">'+Object.keys(RCOL).map(function(x){return '<span style="--c:'+RCOL[x]+'">'+RNAME[x]+'</span>'}).join('')+'</div>';return}
+ Object.keys(allP).forEach(function(x){allP[x].style.opacity=0});mainP.style.opacity=1;mainP.style.fill=RCOL[k];mainP.style.stroke=RCOL[k];var from=cur.slice(),to=RD[k];tween(700,function(t){cur=from.map(function(f,i){return f+(to[i]-f)*t});mainP.setAttribute('points',ptsStr(cur))});
+ s.innerHTML='<div class="kicker" style="color:'+RCOL[k]+'">'+RNAME[k]+' 的证据策略</div><div class="tagline">'+RSTRAT[k][0]+'</div><p>'+RSTRAT[k][1]+'</p><p class="small muted">'+AX.map(function(a,i){return a+' '+'●'.repeat(Math.round(to[i]))+'○'.repeat(5-Math.round(to[i]))}).join('<br>')+'</p>'}
+seg($('#radarBtns'),'.btn',function(b){setRadar(b.dataset.k)});setRadar('code');
+
+/* funnel particles */
+(function(){var svg=$('#funnel'),G=$('.dots',svg),parts=[],run=false,last=0;
+function hh(x){var P=[[20,85],[200,50],[400,20],[580,10]];for(var i=0;i<P.length-1;i++){if(x<=P[i+1][0]){var t=(x-P[i][0])/(P[i+1][0]-P[i][0]);return P[i][1]+(P[i+1][1]-P[i][1])*t}}return 10}
+function spawn(){var c=el('circle',{r:3.2,class:'fd'},G);parts.push({x:22,r:Math.random()*2-1,el:c,p1:Math.random()<0.28,p2:Math.random()<0.4,sp:1.3+Math.random()*0.8})}
+function step(now){if(!run)return;if(now-last>90){spawn();last=now}for(var i=parts.length-1;i>=0;i--){var q=parts[i];q.x+=q.sp;if((q.x>200&&!q.p1)||(q.x>400&&!q.p2)){q.el.remove();parts.splice(i,1);continue}if(q.x>400)q.el.setAttribute('class','fd pass');if(q.x>578){q.el.remove();parts.splice(i,1);continue}q.el.setAttribute('cx',q.x.toFixed(1));q.el.setAttribute('cy',(100+q.r*hh(q.x)*0.82).toFixed(1))}requestAnimationFrame(step)}
+if(reduce)return;new IntersectionObserver(function(es){run=es[0].isIntersecting;if(run)requestAnimationFrame(step)}).observe(svg)})();
+
+/* ---------- act7: see/do + fan ---------- */
+var SDT={see:'<b>只看</b>：你观察到 X 和 Y 一起变。但混杂 U（比如实验批次）同时影响了 X 和 Y——你分不清是 X 导致了 Y，还是 U 导致了两者。',do:'<b>亲手改</b>：你主动设定 X，等于<b style="color:var(--coral)">剪断了 U → X</b> 这条线，Y 的变化只能来自 X。再配上反事实（如果没改 X，Y′ 会怎样），因果才完整。'};
+function setSD(k){var s=$('#sd');s.classList.toggle('see',k==='see');s.classList.toggle('do',k==='do');$('#eUX').classList.toggle('cut',k==='do');$('#sdcap').innerHTML=SDT[k]}
+seg($('#sdBtns'),'.btn',function(b){setSD(b.dataset.k)});setSD('see');
+(function(){var f=$('#fan');var L=el('g',{},f);el('rect',{x:10,y:84,width:170,height:42,rx:10,class:'g'},L);var t=el('text',{x:95,y:103,'text-anchor':'middle','font-size':13,'font-weight':700},L);t.textContent='RTL：s = a + b';var t2=el('text',{x:95,y:119,'text-anchor':'middle','font-size':11},L);t2.textContent='一行"加法"（逻辑层）';
+var names=['行波进位','超前进位','Kogge-Stone','Brent-Kung','进位选择','……还有几十种'];names.forEach(function(n,i){var y=12+i*32;var ln=el('line',{x1:180,y1:105,x2:330,y2:y+13,class:'draw'},f);ln.style.animationDelay=(i*0.15)+'s';el('rect',{x:330,y:y,width:128,height:26,rx:7,class:'g'},f);var tx=el('text',{x:394,y:y+17,'text-anchor':'middle'},f);tx.textContent=n;var d=el('text',{x:468,y:y+17},f);d.textContent='延迟 '+['慢','快','很快','较快','中','?'][i]});
+var c=el('text',{x:395,y:206,'text-anchor':'middle','font-size':11.5},f);c.textContent='门级实现（物理层）：面积、功耗、延迟各不相同，还随工艺角变化'})();
+function goFan(){$('#fan').classList.add('go')}
+
+/* ---------- act8: boundary ---------- */
+var BD={
+ code:{inner:['改代码','改 prompt','改工具'],mid:['改测试 · 需人审'],outer:['CI 与发布规则','人工 review'],intr:'改测试',split:['能改代码','改不了配套环境'],ok:'Coding 的边界是测试和 CI：可以改代码、prompt、工具，但一般不能改测试；要改测试，得有人审。'},
+ chip:{inner:['改 RTL','改约束','改 floorplan'],mid:['改设计 flow'],outer:['签核标准','工艺库'],intr:'改签核标准',split:['能改 RTL','改不了约束'],ok:'芯片的边界是签核和流片：可以改 RTL、约束、floorplan，不能改签核标准、工艺库，更不能自己签字。'},
+ bio:{inner:['改假设','改方案'],mid:['升级到下一阶段'],outer:['伦理规则','审批'],intr:'改评价终点',split:['能改设计','改不了方案'],ok:'实验科学的边界是实验、伦理与监管：可以改假设和方案，不能改伦理规则和评价终点，也不能自己批准。'},
+ work:{inner:['改 playbook','改决策','改流程'],mid:['改路由规则'],outer:['权限','合规'],intr:'改 KPI',split:['能改决策','改不了流程'],ok:'开放工作流的边界是人和业务：可以改 playbook、决策、流程，但不能改权限，也不能碰合规。'}};
+var bdK='code',bdF='ok';
+var FAIL={loose:['画得太松 → 权威俘获','外圈的东西被放进了内圈：系统可以改测试、改签核标准、改 KPI。它很快学会"怎么让指标好看"，而"怎么让事情变好"反倒没人管了。'],tight:['画得太紧 → 什么也改不动','可编辑空间只剩一个 prompt，不能改工具、流程、实验设计。看起来很安全，但学不到任何有用的东西——很多"领域 Agent"就死在这里。'],split:['画得不一致 → 因果链断了','能改动作，却改不了与动作配套的条件。改了一半，结果自然对不上。']};
+function renderBD(){var d=BD[bdK],g=$('#bdItems');var h='<g class="inner-items">';var iy=d.inner.length===2?[160,184]:[150,172,194];d.inner.forEach(function(t,i){h+='<text class="it" x="200" y="'+iy[i]+'">'+t+'</text>'});h+='</g>';
+ h+='<text class="it" x="200" y="88" style="fill:var(--gold)">'+d.mid[0]+'</text>';h+='<text class="it" x="200" y="262" style="fill:var(--gold);font-weight:400;font-size:11.5px">拿证据说话</text>';
+ h+='<text class="it" x="132" y="290" style="fill:var(--coral)">'+d.outer[0]+'</text><text class="it" x="268" y="290" style="fill:var(--coral)">'+d.outer[1]+'</text>';g.innerHTML=h;
+ $('#intrT').textContent='⚠ '+d.intr;$('#spL').textContent=d.split[0];$('#spR').textContent=d.split[1];
+ var b=$('#bd');b.classList.remove('loose','tight','split-on');if(bdF==='loose')b.classList.add('loose');if(bdF==='tight')b.classList.add('tight');if(bdF==='split')b.classList.add('split-on');
+ var fb=$('#failBox');if(bdF==='ok')fb.innerHTML='<h5 style="color:var(--accent)">画对了</h5><p>'+d.ok+'</p><p class="small muted">内圈可以高速递归；中圈每次改动都要拿证据；外圈必须由系统之外的人或机构授权。</p>';else fb.innerHTML='<h5 style="color:var(--coral)">'+FAIL[bdF][0]+'</h5><p>'+FAIL[bdF][1]+'</p>'}
+seg($('#bdDom'),'.btn',function(b){bdK=b.dataset.k;renderBD()});seg($('#bdFail'),'.btn',function(b){bdF=b.dataset.f;renderBD()});renderBD();
+
+/* ---------- act9: proxy loop + chart ---------- */
+var PL=['<b style="color:var(--coral)">真实环境</b>：提供真实数据，用来校准代理。它不可逆、贵、慢，但它是唯一的真值。','<b>代理环境</b>：仿真、in silico、数字孪生……可逆、便宜、快。负责大量筛选、生成候选。','<b>实验设计</b>：整个环里最容易被低估的一步——决定下一个该测什么，挑那个能把假设分开的实验。','<b style="color:var(--coral)">真实实验</b>：提供不可替代的证据。花在这里的每一分钱，都要买到最大的信息量。','<b>证据账本</b>：把干预、条件、结果、失败原因写回去，用来更新代理、更新因果图。'];
+$$('#pl .nbox').forEach(function(n){n.addEventListener('click',function(){$$('#pl .nbox').forEach(function(x){x.classList.toggle('act',x===n)});$('#plinfo').innerHTML=PL[+n.dataset.i]})});
+var CD={on:{p:[30,38,45,51,56,60,64,67,70,72,74,76],r:[28,35,42,48,53,57,61,64,67,69,71,73]},off:{p:[30,38,47,56,64,71,77,82,86,89,92,94],r:[28,35,40,43,44,45,44,44,43,43,42,42]}};
+function cx(i){return 50+i*480/11}function cy(v){return 220-v*1.9}
+function lineD(a){return a.map(function(v,i){return (i?'L':'M')+cx(i).toFixed(1)+' '+cy(v).toFixed(1)}).join(' ')}
+var cp=CD.on.p.slice(),cr=CD.on.r.slice();
+function drawChart(){$('#lpProxy').setAttribute('d',lineD(cp));$('#lpReal').setAttribute('d',lineD(cr));var g='M'+cp.map(function(v,i){return cx(i).toFixed(1)+' '+cy(v).toFixed(1)}).join(' L')+' L'+cr.slice().reverse().map(function(v,j){var i=cr.length-1-j;return cx(i).toFixed(1)+' '+cy(v).toFixed(1)}).join(' L')+' Z';$('#gapP').setAttribute('d',g)}
+drawChart();
+seg($('#calBtns'),'.btn',function(b){var k=b.dataset.k,fp=cp.slice(),fr=cr.slice(),tp=CD[k].p,tr=CD[k].r;tween(900,function(t){cp=fp.map(function(v,i){return v+(tp[i]-v)*t});cr=fr.map(function(v,i){return v+(tr[i]-v)*t});drawChart()});var o=k==='off'?1:0;$('#gapP').style.transition='opacity .6s';$('#gapP').style.opacity=o;$('#gapP').setAttribute('opacity',1);$('#gapLab').style.transition='opacity .6s';$('#gapLab').style.opacity=o;$('#gapLab').setAttribute('opacity',1)});
+$('#gapP').style.opacity=0;$('#gapLab').style.opacity=0;
+
+/* ---------- act10: game ---------- */
+var EXPS=[
+ {id:'gen',name:'再生成 3 版 RTL 候选',d:1,c:1,disc:false,A:'得到 3 版新代码',B:'得到 3 版新代码',why:'生成了更多候选，但完全没回答"违例从哪来"。'},
+ {id:'relax',name:'直接降频（放松时序约束）',d:1,c:1,disc:false,A:'违例消失',B:'违例也消失',why:'症状消了，病因没查。两个假设预言一模一样。'},
+ {id:'path',name:'拆关键路径：看逻辑级数与"门延迟 / 线延迟"占比',d:1,c:1,disc:true,A:'门延迟占大头，逻辑级数超标',B:'线延迟占大头，逻辑级数正常',why:'便宜，而且两个假设预言不同——这是一个判别性实验。'},
+ {id:'fp',name:'换一个更松的 floorplan，重跑布局布线',d:4,c:5,disc:true,A:'违例基本不变',B:'违例明显缓解',why:'成本中等，两个假设预言不同——判别性实验。'},
+ {id:'tape',name:'再流片一次，看硅测结果',d:90,c:200,disc:false,A:'硅上时序不过',B:'硅上时序同样不过',why:'最贵、最慢，却同样分不开 A 和 B。'}];
+var G={pA:.5,n:0,d:0,c:0,truth:'A',done:false};
+function H(p){if(p<=0||p>=1)return 0;return -(p*Math.log2(p)+(1-p)*Math.log2(1-p))}
+function gRender(){var a=Math.round(G.pA*100),b=100-a;var bA=$('#bA'),bB=$('#bB');bA.style.width=a+'%';bB.style.width=b+'%';bA.textContent=a>=12?'A '+a+'%':'';bB.textContent=b>=12?'B '+b+'%':'';$('#sN').textContent=G.n;$('#sD').textContent=G.d;$('#sC').textContent=G.c;$('#sH').textContent=H(G.pA).toFixed(2)}
+function gReset(){G={pA:.5,n:0,d:0,c:0,truth:Math.random()<.5?'A':'B',done:false};$('#pred').innerHTML='<span class="muted">← 选一个实验。这里会先列出"两个假设各自预言什么"，再给出这次的结果。</span>';var dm=$('#doneMsg');dm.style.display='none';gRender()}
+function gRun(e){if(G.done){return}G.n++;G.d+=e.d;G.c+=e.c;var obs,upd='';
+ if(e.disc){var correct=Math.random()<.85;var shows=correct?G.truth:(G.truth==='A'?'B':'A');obs=e[shows];var lA=shows==='A'?.85:.15,lB=shows==='B'?.85:.15;var before=G.pA;G.pA=G.pA*lA/(G.pA*lA+(1-G.pA)*lB);upd='信念从 A '+Math.round(before*100)+'% → <b>'+Math.round(G.pA*100)+'%</b>';}
+ else{obs=e.A;upd='信念<b>没有任何变化</b>'}
+ $('#pred').innerHTML='<b>'+e.name+'</b><table><tr><td>若 A 为真</td><td>'+e.A+'</td></tr><tr><td>若 B 为真</td><td>'+e.B+'</td></tr></table>'+(e.disc?'<span class="verdict y">两个预言不同 ⇒ 判别性实验</span>':'<span class="verdict n">两个预言相同 ⇒ 做了也不改变信念</span>')+'<div class="result">本次结果：'+obs+'；'+upd+'</div><div class="small muted">'+e.why+'</div>';
+ gRender();var m=Math.max(G.pA,1-G.pA);if(m>=.95){G.done=true;var dm=$('#doneMsg');dm.style.display='block';dm.innerHTML='✓ 你用了 <b>'+G.n+'</b> 个实验、<b>'+G.d+'</b> 天、成本 <b>'+G.c+'</b>，把不确定性从 1 bit 降到 '+H(G.pA).toFixed(2)+' bit。<br>揭晓真相：<b>假设 '+G.truth+'</b>'+((G.pA>.5?'A':'B')===G.truth?'，你判断对了。':'——你被一次不可靠的结果带偏了，这就是要做重复实验的原因。')+(G.c>=200?'<br>你还花了一次流片的钱……而它一点信息都没给你。':'')}}
+$('#exps').innerHTML=EXPS.map(function(e,i){return '<button class="exp" type="button" data-i="'+i+'"><span>'+e.name+'</span><small>'+e.d+'天 · 成本'+e.c+'</small></button>'}).join('');
+$$('#exps .exp').forEach(function(b){b.addEventListener('click',function(){gRun(EXPS[+b.dataset.i])})});
+$('#gReset').addEventListener('click',gReset);gReset();
+
+/* ---------- act11: tabs & picks ---------- */
+$$('[data-tabs]').forEach(function(t){var card=t.closest('.card');seg(t,'.btn',function(b){$$('.dpanel',card).forEach(function(p){p.classList.toggle('on',p.dataset.panel===b.dataset.tab)})})});
+var CP={rtl:['改 RTL（减少逻辑深度）','可能根治','要重跑整条流程','可能影响功能正确性','根因是逻辑级数太深'],sdc:['改约束（放松频率）','最快','直接牺牲性能','掩盖了真正的病因','目标本来就定得过紧'],fp:['改 floorplan（减少拥塞）','缓解拥塞、缩短走线','要重跑布局布线','可能让其他路径变差','根因是局部拥塞'],cts:['改时钟树（减少 skew）','改善时钟偏斜','时钟树要重新综合','可能增加功耗','根因是时钟偏斜']};
+seg($('#chipPicks'),'.btn',function(b){var d=CP[b.dataset.k];$('#chipOut').innerHTML='<b>'+d[0]+'</b><div class="r"><span>好处</span><span>'+d[1]+'</span></div><div class="r"><span>代价</span><span>'+d[2]+'</span></div><div class="r"><span>风险</span><span>'+d[3]+'</span></div><div class="r"><span>何时选它</span><span>'+d[4]+'</span></div><div class="small muted" style="margin-top:6px">没有一个干预"永远正确"——先用跨层因果图判断根因在哪层，才知道该选哪个。</div>'});
+var WP={refund:['退款','满意度立刻上升','成本最高；长期可能吸引更多恶意投诉','不能一律退款'],swap:['换货','问题解决、成本居中','效果取决于这一批次的缺陷率——这正是要查证据的地方','要结合批次数据判断'],esc:['升级技术排查','省下退款，可能找到根因','客户可能觉得被"踢皮球"','不能一律升级']};
+seg($('#workPicks'),'.btn',function(b){var d=WP[b.dataset.k];$('#workOut').innerHTML='<b>'+d[0]+'</b><div class="r"><span>短期</span><span>'+d[1]+'</span></div><div class="r"><span>长期</span><span>'+d[2]+'</span></div><div class="r"><span>结论</span><span>'+d[3]+'，用反事实回放比较同类客户在不同决策下的长期结果，再写回 playbook。</span></div>'});
+
+/* ---------- act14: E x C ---------- */
+var ECD={code:{e:[2,3],c:[1,2],col:'var(--code)',n:'Coding',ins:5,lab:'br',t:'<b>Coding</b> · E2–E3 / C1–C2 · 权威门：CI + review。因果链短、回滚便宜，受控干预加配对就够用。'},job:{e:[1,2],c:[0,1],col:'var(--gold)',n:'JobBench',ins:11,lab:'bl',t:'<b>JobBench</b> · E1–E2 / C0–C1 · 权威门：业务负责人 + 合规。社会因果链太长太混杂，大多还停在"相关"层面。'},chip:{e:[1,3],c:[2,3],col:'var(--chip)',n:'芯片',ins:8,lab:'tr',t:'<b>芯片</b> · E1–E3 / C2–C3 · 权威门：签核 + 代工厂。流片不可逆，所以要求反事实与跨环境级别的因果。'},bio:{e:[1,2],c:[2,4],col:'var(--bio)',n:'生命科学',ins:14,lab:'tl',t:'<b>生命科学</b> · E1–E2 / C2–C4 · 权威门：伦理与监管机构。结果不可逆、约束最强，对因果的要求一直延伸到机制层。'}};
+(function(){var s=$('#ec'),X0=110,Y0=16,W=94,Hh=52;for(var e=0;e<5;e++)for(var c=0;c<5;c++)el('rect',{x:X0+e*W,y:Y0+c*Hh,width:W,height:Hh,class:'cell'},s);
+var EL=['demo 单例','单轮增益','匹配预算+保留','跨任务+独立验证','复利增长'],CL=['相关','受控干预','反事实/配对','跨环境','机制'];
+EL.forEach(function(l,i){var t=el('text',{x:X0+i*W+W/2,y:Y0+5*Hh+18,'text-anchor':'middle',class:'ax'},s);t.textContent='E'+i;var t2=el('text',{x:X0+i*W+W/2,y:Y0+5*Hh+33,'text-anchor':'middle',class:'axs'},s);t2.textContent=l});
+CL.forEach(function(l,i){var y=Y0+(4-i)*Hh+Hh/2;var t=el('text',{x:X0-10,y:y-2,'text-anchor':'end',class:'ax'},s);t.textContent='C'+i;var t2=el('text',{x:X0-10,y:y+13,'text-anchor':'end',class:'axs'},s);t2.textContent=l});
+Object.keys(ECD).forEach(function(k,j){var d=ECD[k],g=el('g',{class:'dom','data-k':k},s);g.style.transitionDelay=(j*0.18)+'s';var x=X0+d.e[0]*W+d.ins,w=(d.e[1]-d.e[0]+1)*W-2*d.ins,y=Y0+(4-d.c[1])*Hh+d.ins,h=(d.c[1]-d.c[0]+1)*Hh-2*d.ins;var r=el('rect',{x:x,y:y,width:w,height:h,rx:10},g);r.style.fill=d.col;r.style.fillOpacity=.14;r.style.stroke=d.col;
+var lx=d.lab[1]==='r'?x+w-8:x+8,ly=d.lab[0]==='t'?y+18:y+h-8;var t=el('text',{x:lx,y:ly,'text-anchor':d.lab[1]==='r'?'end':'start'},g);t.style.fill=d.col;t.textContent=d.n})})();
+function goEC(){$('#ec').classList.add('go')}
+seg($('#ecBtns'),'.btn',function(b){var k=b.dataset.k,s=$('#ec');if(k==='all'){s.classList.remove('focus');$('#ecInfo').innerHTML='四个领域叠在一起看：越往上，对因果的要求越高；越往右，证据积累得越充分。';return}s.classList.add('focus');$$('.dom',s).forEach(function(g){g.classList.toggle('f',g.getAttribute('data-k')===k)});$('#ecInfo').innerHTML=ECD[k].t});
+
+/* ---------- act12: open workflow ---------- */
+var DIL=[['决策层','当下',92,''],['团队层','天 ~ 周',70,'交接 · 激励'],['业务层','周 ~ 月',42,'市场 · 竞品 · 季节'],['客户层','月 ~ 年',20,'外部事件 · 口碑 · 时间']];
+$('#dilute').innerHTML=DIL.map(function(d){return '<div class="dil"><div class="nm"><b>'+d[0]+'</b><small>'+d[1]+'</small></div><div class="tr"><i class="sg" data-w="'+d[2]+'">信号 '+d[2]+'%</i><i class="cf" data-w="'+(100-d[2])+'">'+(d[3]?'混杂：'+d[3]:'')+'</i></div></div>'}).join('');
+function goDilute(){$$('#dilute .dil').forEach(function(r,i){setTimeout(function(){$$('i',r).forEach(function(x){x.style.width=x.dataset.w+'%'})},reduce?0:i*380)})}
+var ROLES=[['事件','事件层的入口：消息、邮件、工单、审批、CI 结果。第一个判断是"这件事要不要处理"——它决定系统会不会被噪声淹没。'],['Router','负责分诊、分派和全局记忆，决定"这件事交给谁"。它不需要最强的模型，但需要<b>最稳的路由策略</b>。'],['Worker','负责具体执行：回复、修改、生成文档、走流程。需要领域知识、工具使用和上下文管理，决定"怎么执行"。'],['Judge / Reviewer','评审回复好不好、决策合不合规、交付物完不完整。关键约束：<b>不能自己评自己</b>——最好和 Worker 用不同的模型、提示和证据，否则就有共谋的风险。'],['Human Oracle','人工审核、例外处理、价值判断。作者特别强调：它是<b>"因果判断的来源"</b>——为什么好、为什么不好、换一种做法会怎样——而不只是流程末端的"最后一个按钮"。']];
+function showRole(i){$$('#roleChain .role').forEach(function(b){b.classList.toggle('on',+b.dataset.r===i)});$('#roleInfo').innerHTML='<b>'+ROLES[i][0]+'</b>：'+ROLES[i][1]}
+$$('#roleChain .role').forEach(function(b){b.addEventListener('click',function(){showRole(+b.dataset.r)})});showRole(1);
+var CFT={naive:'<b style="color:var(--coral)">直接比较</b>：退款组满意度 82，换货组 74——看起来"退款明显更好，以后多退款"。一个只盯 KPI 的系统，会直接从这里学到这条规则。',match:'<b style="color:var(--accent)">按问题严重度配对</b>：同样是轻微问题，退款 85、换货 83；同样是严重问题，退款 70、换货 72——差距几乎消失，严重问题上换货甚至略好。原因在下面的构成条里：退款组 80% 是本来就好处理的轻微问题。<b>问题严重度是混杂因素</b>，"退款更好"大半是假象。'};
+function setCF(k){$('#cfWrap').className='cfwrap '+k;$('#cfMix').classList.toggle('on',k==='match');$('#cfInfo').innerHTML=CFT[k]}
+seg($('#cfBtns'),'.btn',function(b){setCF(b.dataset.k)});setCF('naive');
+function goCF(){$$('#cfWrap .cfb>div').forEach(function(b,i){setTimeout(function(){b.style.height=(+b.dataset.v*1.5)+'px'},reduce?0:i*90)})}
+})();
+</script>
+</body>
+</html>
